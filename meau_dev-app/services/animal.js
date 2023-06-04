@@ -51,6 +51,7 @@ export const getImageBase64 = async (path) => {
     const response = await fetch(url);
     const blob = await response.blob();
     const base64 = await blobToBase64(blob);
+
     return base64;
   } catch (error) {
     console.log("Error retrieving image from Firebase Storage:", error);

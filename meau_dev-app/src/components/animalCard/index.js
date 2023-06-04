@@ -11,7 +11,10 @@ const AnimalCard = ({ animal }) => {
           <Text style={styles.name}> {animal.name} </Text>
         </View>
       ) : (
-        <Text> {animal.name} </Text>
+        <View style={styles.card}>
+          <Image style={styles.image} source={require('../../../assets/images/image_not_found.jpg')} />
+          <Text> {animal.name} </Text>
+        </View>
       )}
     </View>
   );

@@ -10,6 +10,5 @@ export const getUserPets = async () => {
 };
 
 export const getAdoptionPets = async () => {
-  console.log("getAdoptionPets");
   return await getAnimalsForAdoption();
 };

@@ -46,7 +46,7 @@ const PetAdoption = ({ navigation }) => {
     <ScrollView style={styles.container}>
       {animals.length > 0 && animals.map((animal, index) => (
         <View key={index} style={styles.pets}>
-          <TouchableOpacity onPress={() => navigation.navigate('AnimalInfo', animal)} >
+          <TouchableOpacity onPress={() => navigation.navigate('Informação Animal', animal)} >
             <AnimalCard animal={animal} />
           </TouchableOpacity >
         </View>
