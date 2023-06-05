@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Image, ActivityIndicator } from "react-native";
+import { ScrollView, View, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import { getImageBase64 } from "../../../services/animal";
 import { getUserPets } from "../../../services/user_animal";
 import AnimalCard from "../../components/animalCard"
