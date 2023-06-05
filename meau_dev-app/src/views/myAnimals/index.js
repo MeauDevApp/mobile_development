@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View, Image, ActivityIndicator } from "react-native";
+import { ScrollView, View, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import { getImageBase64 } from "../../../services/animal";
 import { getUserPets } from "../../../services/user_animal";
 import AnimalCard from "../../components/animalCard"
@@ -46,7 +46,9 @@ const MyAnimals = ({ navigation }) => {
     <ScrollView style={styles.container}>
       {animals.length > 0 && animals.map((animal, index) => (
         <View key={index} style={styles.pets}>
-          <AnimalCard animal={animal} />
+          <TouchableOpacity onPress={() => navigation.navigate('Informação Animal', animal)} >
+            <AnimalCard animal={animal} />
+          </TouchableOpacity >
         </View>
       ))}
     </ScrollView>
