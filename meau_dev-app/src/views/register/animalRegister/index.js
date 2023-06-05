@@ -6,6 +6,7 @@ import AddPhoto from '../../../components/addPhoto';
 import { create as createAnimal } from '../../../../services/animal';
 import { storage } from '../../../../database/firebaseDb';
 import { ref, uploadBytes, uploadString } from 'firebase/storage';
+import { get, getCurrentUser } from '../../../../services/user';
 
 const AnimalRegisterScreen = ({ navigation }) => {
     const [checked1, setChecked1]   = useState(false);
@@ -39,12 +40,13 @@ const AnimalRegisterScreen = ({ navigation }) => {
     const [age, setAge]             = useState('');
     const [file, setFile]           = useState({ imagePath: 'animals/', base64: '' });
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const aleatoryNumber = getRandomNumber(0, 10000);
         const imageRef = file.imagePath + name + aleatoryNumber;
+        const userId = (await getCurrentUser()).uid;
+        const userName = await get(userId).name;
+        const user = {user: userName}
         const animal = { name, specie, gender, size, age, temperance, guard, health, imageRef };
-        const user = { name: "Octavio Augusto"} // use authenticated username
-
         createAnimal(animal, user);
         sendPhoto(imageRef);
         cleanAnimalFields();

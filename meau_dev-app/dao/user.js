@@ -33,9 +33,8 @@ export const getUsers = async () => {
 
 export const getUser = async (id) => {
   const userDoc = await getDoc(doc(db, 'users', id))
-
   if (userDoc.exists())
-    return userDoc;
+    return userDoc.data();
   else {
     console.log('No such document!');
   }

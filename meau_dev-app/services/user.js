@@ -29,7 +29,7 @@ export const update = (id, data) => {
 };
 
 export const getCurrentUser = async () => {
-  const currentUser = getAuth().currentUser;
+  const currentUser = await getAuth().currentUser;
 
   if (currentUser) return currentUser;
 };
