@@ -46,7 +46,9 @@ const MyAnimals = ({ navigation }) => {
     <ScrollView style={styles.container}>
       {animals.length > 0 && animals.map((animal, index) => (
         <View key={index} style={styles.pets}>
-          <AnimalCard animal={animal} />
+          <TouchableOpacity onPress={() => navigation.navigate('Informação Animal', animal)} >
+            <AnimalCard animal={animal} />
+          </TouchableOpacity >
         </View>
       ))}
     </ScrollView>
