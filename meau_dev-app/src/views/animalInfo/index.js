@@ -10,10 +10,14 @@ const AnimalInfo = ({ route, navigation }) => {
   const [age, setAge] = useState('');
   const [size, setSize] = useState('');
   const [gender, setGender] = useState('');
-  const [temperance, setTemperance] = useState([]);
-  const [guard, setGuard] = useState([]);
-  const [health, setHealth] = useState([]);
-  const [vaccinated, setVaccinated] = useState('');
+  const [dewormed, setDewormed] = useState(false);
+  const [castrated, setCastrated] = useState(false);
+  const [sick, setSick] = useState(false);
+  const [vaccinated, setVaccinated] = useState(false);
+  const [playful, setPlayful] = useState('');
+  const [shy, setShy] = useState('');
+  const [calm, setCalm] = useState('');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,11 +34,21 @@ const AnimalInfo = ({ route, navigation }) => {
   }, []);
 
   function setAnimalDetails(animal) {
+    console.log("entrou")
     setAge(animal.age);
     setSize(animal.size);
     setGender(animal.gender);
-    setTemperance(animal.temperance);
-    setHealth(animal.health);
+    animal.health.forEach((h) => {
+      if (h == "Vermifugado") setDewormed(true)
+      if (h == "Castrado") setCastrated(true)
+      if (h == "Doente") setSick(true)
+      if (h == "Vacinado") setVaccinated(true)
+    })
+    animal.temperance.forEach((t) => {
+      if (t == "Brincalhão") setPlayful(t)
+      if (t == "Tímido") setShy(t)
+      if (t == "Calmo") setCalm(t)
+    })
   }
   const handleInterested = () => {
     // todo
@@ -68,35 +82,32 @@ const AnimalInfo = ({ route, navigation }) => {
       <SafeAreaView style={styles.alingItems}>
         <View >
           <Text style={styles.label} >Castrado</Text>
-          <Text style={styles.content}></Text>
+          <Text style={styles.content}>{castrated ? 'Sim' : 'Não'}</Text>
         </View>
         <View>
           <Text style={styles.label}>Vermificado</Text>
-          <Text style={styles.content}></Text>
+          <Text style={styles.content}>{dewormed ? 'Sim' : 'Não'}</Text>
         </View>
       </SafeAreaView>
       <SafeAreaView style={styles.alingItems}>
         <View>
           <Text style={styles.label}>Vacinado</Text>
-          <Text style={styles.content}>Sim</Text>
+          <Text style={styles.content}>{vaccinated ? 'Sim' : 'Não'}</Text>
         </View>
         <View>
           <Text style={styles.label}>Doenças</Text>
-          <Text style={styles.content}>Doenças</Text>
+          <Text style={styles.content}>{sick ? 'Sim' : 'Não'}</Text>
         </View>
       </SafeAreaView>
       <View >
         <Text style={styles.label}>Temperamento</Text>
-        <Text style={styles.content}></Text>
-
+        <Text style={styles.content}>{playful}, {calm}, {shy}</Text>
         <Text style={styles.label}>O {animal.name} precisa de</Text>
-        <Text style={styles.content}>O {animal.name} precisa de</Text>
-
+        <Text style={styles.content}>TODO</Text>
         <Text style={styles.label}>Exigências do doador</Text>
-        <Text style={styles.content}>Exigências do doador</Text>
-
+        <Text style={styles.content}>TODO</Text>
         <Text style={styles.label}>Mais sobre {animal.name}</Text>
-        <Text style={styles.content}>Mais sobre {animal.name}</Text>
+        <Text style={styles.content}>TODO</Text>
 
       </View>
       <View style={styles.alingItems}>
