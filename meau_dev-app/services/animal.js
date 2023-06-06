@@ -1,6 +1,7 @@
 import {
   addAnimal,
   getAnimal,
+  getAnimalByName,
   getAnimals,
   removeAnimal,
   updateAnimal,
@@ -24,6 +25,10 @@ export const getAll = () => {
 export const get = (id) => {
   return getAnimal(id);
 };
+
+export const getByName = (name) => {
+  return getAnimalByName(name);
+}
 
 export const remove = (id) => {
   return removeAnimal(id);

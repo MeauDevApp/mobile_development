@@ -59,6 +59,21 @@ export const getAnimal = async (id) => {
   }
 };
 
+export const getAnimalByName = async (name) => {
+  var animals = [];
+  const q = query(collection(db, 'animals'), where("name", "==", name));
+  await getDocs(q)
+    .then((docs) => {
+      docs.forEach((doc) => {
+        animals.push(doc.data(), doc.id);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return animals;
+}
+
 export const removeAnimal = async (id) => {
   try {
     const animalDoc = doc(db, 'animals', id);
