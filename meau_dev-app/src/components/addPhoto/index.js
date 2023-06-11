@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './styles.style';
 import * as ImagePicker from 'expo-image-picker';
 
-const AddPhoto = ({ onValueChange }) => {
+const AddPhoto = ({ onValueChange, formSubmitted }) => {
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    if (formSubmitted) {
+      setImage(null);
+    }
+  }, [formSubmitted]);
 
   const chooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

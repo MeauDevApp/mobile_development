@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./home.style";
+import { updateAnimalsE } from "../../../services/animal";
+import { removeAttr, renameAttr, updateAllAttrFields } from "../../../database/functions";
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -12,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
         {"\n"}
         Qual seu interesse?
       </Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Adotar um Pet")}>
         <Text style={styles.textButton}>ADOTAR</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>

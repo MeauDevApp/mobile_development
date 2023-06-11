@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import styles from "./styles.style";
 import { getByName, remove } from "../../../services/animal";
+import { update } from "../../../services/animal";
 
 const AnimalInfo = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,7 @@ const AnimalInfo = ({ route, navigation }) => {
 
 
   useEffect(() => {
+    console.log(animal)
     const fetchData = async () => {
       try {
         const animalsData = await getByName(animal.name)
@@ -117,6 +119,11 @@ const AnimalInfo = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={() => handleRemovePet()}>Remover Pet</Text>
         </TouchableOpacity>
+        { !animal.toBeAdopted &&
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText} onPress={() => update( animalId, "toBeAdopted" )}> Colocar para adoção</Text>
+          </TouchableOpacity>
+        }
       </View>
     </ScrollView>
   );

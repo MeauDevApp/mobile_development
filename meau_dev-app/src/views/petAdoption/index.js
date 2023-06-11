@@ -23,6 +23,7 @@ const PetAdoption = ({ navigation }) => {
               return { ...animal, imageBase64 };
           })
         )
+        console.log(animalsWithImages);
         setAnimals(animalsWithImages);
         setLoading(false);
 

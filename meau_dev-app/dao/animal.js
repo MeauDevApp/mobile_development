@@ -8,7 +8,6 @@ export const addAnimal = async (animal, user) => {
   await addDoc(animalsCollection, animal)
   .then((docs) => {
     console.log("Document successfully written!");
-    console.log("idAnimal", docs.id)
     createUserAnimal(user, animal, docs.id);
   }).catch((error) => {
     console.log("error", error);
@@ -17,7 +16,7 @@ export const addAnimal = async (animal, user) => {
 
 export const getAnimalsForAdoption = async () => {
   var animals = [];
-  const q = query(collection(db, 'animals'), where("adopted", "==", "false"));
+  const q = query(collection(db, 'animals'), where("toBeAdopted", "==", true));
 
   await getDocs(q)
     .then((docs) => {
@@ -77,8 +76,7 @@ export const getAnimalByName = async (name) => {
 export const removeAnimal = async (id) => {
   try {
     const animalDoc = doc(db, 'animals', id);
-
-    await deleteDoc(animalDoc);    
+    await deleteDoc(animalDoc);
     console.log('animal successfully deleted!');
   } catch (error) {
     console.error('Error removing animal: ', error);
@@ -88,8 +86,17 @@ export const removeAnimal = async (id) => {
 export const updateAnimal = async (id, data) => {
   try {
     const animalDoc = doc(db, 'animals', id);
-    console.log(data);
     await updateDoc(animalDoc, data);
+    console.log('animal successfully updated!');
+  } catch (error) {
+    console.error('Error updating animal: ', error);
+  }
+};
+
+export const AdoptedUpdateAnimal = async (id) => {
+  try {
+    const animalDoc = doc(db, 'animals', id);
+    await updateDoc(animalDoc, { toBeAdopted: true });
     console.log('animal successfully updated!');
   } catch (error) {
     console.error('Error updating animal: ', error);
