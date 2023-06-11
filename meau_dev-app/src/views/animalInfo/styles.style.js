@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color: '#434343',
   },
-  alingItems: {
+  buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
