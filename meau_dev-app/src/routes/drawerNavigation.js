@@ -6,16 +6,15 @@ import HomeScreen from "../views/home/home";
 import MyAnimals from "../views/myAnimals";
 import Login from "../views/register/login";
 import AnimalInfo from "../views/AnimalInfo";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { signOut } from '../../redux/actions/signOut';
 
 const Drawer = createDrawerNavigator();
 
-export const CustomDrawerContent = (props) => {
-  // const dispatch = useDispatch();
-
-  const handleSignOut = () => {
-    // dispatch(signOut());
-    console.log("signOut");
-    // signOut();
+export const CustomDrawerContent = ({ actions, ...props }) => {
+  const handleSignOut = async () => {
+    await actions.signOut();
   };
 
   return (
@@ -38,10 +37,10 @@ const NotAuthUserDrawerNavigation = () => {
   );
 };
 
-export const DrawerNavigation = ({ isValidToken }) => {
+const DrawerNavigation = ({ isValidToken, actions }) => {
   if (isValidToken) {
     return (
-      <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} >
+      <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent actions={{ signOut }} {...props} /> } >
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen
@@ -70,3 +69,19 @@ export const DrawerNavigation = ({ isValidToken }) => {
     return <NotAuthUserDrawerNavigation />;
   }
 };
+
+const mapStateToProps = state => ({
+  token: state.token,
+});
+
+const ActionCreators = {
+  signOut
+};
+
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    signOut: () => bindActionCreators(ActionCreators, dispatch),
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerNavigation);

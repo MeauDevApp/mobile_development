@@ -43,12 +43,13 @@ export const getToken = async () => {
   }
 };
 
-export const tokenIsValid = async (lastLogin) => {
+export const tokenIsValid = async (token, lastLogin) => {
   const currentTime = new Date().getTime();
   const lastLoginTime = new Date(lastLogin).getTime();
   const timeDiffInHours = (currentTime - lastLoginTime) / (1000 * 60 * 60);
 
-  if (timeDiffInHours > 72) return false;
+  if (timeDiffInHours > 72 || !token || token.length == 0) 
+    return false;
   else return true;
 };
 
@@ -77,23 +78,24 @@ export const transformTimestampIntoDate = async (timestamp) => {
   return formattedDate;
 };
 
-export const verifyToken = async () => {
+export const verifyToken = async (userToken) => {
   const currentUser = getAuth().currentUser;
 
   if (currentUser) {
-    // const userDoc = await getUser(currentUser.uid); // it's not connected to firestore
     const lastLogin = currentUser.metadata.lastLoginAt;
-    // const expirationTime = transformTimestampIntoDate(lastLogin);
-    const tokenValid = tokenIsValid(parseInt(lastLogin));
+    const tokenValid = await tokenIsValid(userToken.token, parseInt(lastLogin));
 
     if (!tokenValid) {
       await getAuth().signOut();
-      navigation.navigate("Login");
+      // navigation.navigate("Login");
       return false;
     }
     else
       return true;
       // await currentUser.ref.update({ lastLoginAt: new Date().toISOString() });
+  } 
+  else {
+    return false;
   }
 };
 
