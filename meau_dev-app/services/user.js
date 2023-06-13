@@ -28,8 +28,8 @@ export const update = (id, data) => {
   return updateUser(id, data);
 };
 
-export const getCurrentUser = async () => {
-  const currentUser = await getAuth().currentUser;
+export const getCurrentUser = () => {
+  const currentUser = getAuth().currentUser;
 
   if (currentUser) return currentUser;
 };

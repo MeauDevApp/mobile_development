@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView, Image, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import { getByName, remove } from "../../../services/animal";
 import { update } from "../../../services/animal";
 import styles from "./styles.style";
 
 const AnimalInfo = ({ route, navigation }) => {
-  console.log(animal)
   const animal = route.params.animal;
   const page = route.params.page;
 
@@ -21,28 +21,34 @@ const AnimalInfo = ({ route, navigation }) => {
   const [playful, setPlayful] = useState('');
   const [shy, setShy] = useState('');
   const [calm, setCalm] = useState('');
+  const [toBeAdopted, setToBeAdopted] = useState('');
+  const [dataFetched, setDataFetched] = useState(false);
 
 
-  useEffect(() => {
-    console.log(animal)
-    const fetchData = async () => {
-      try {
-        const animalsData = await getByName(animal.name)
-        console.log(animalsData)
-        setAnimalDetails(animalsData[0])
-        setAnimalId(animalsData[1]);
-      } catch (error) {
-        console.error('Error fetching data:', error)
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const animalsData = await getByName(animal.name)
+          console.log(animalsData)
+          setAnimalDetails(animalsData[0])
+          setAnimalId(animalsData[1]);
+          setLoading(false);
+          setDataFetched(true);
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        }
       }
-    }
-    fetchData();
-  }, []);
+      fetchData();
+    }, [dataFetched])
+  );
 
   function setAnimalDetails(animal) {
-    console.log("entrou")
+    console.log("entrou", animal)
     setAge(animal.age);
     setSize(animal.size);
     setGender(animal.gender);
+    setToBeAdopted(animal.toBeAdopted);
     animal.health.forEach((h) => {
       if (h == "Vermifugado") setDewormed(true)
       if (h == "Castrado") setCastrated(true)
@@ -80,7 +86,7 @@ const AnimalInfo = ({ route, navigation }) => {
   };
 
   const renderRemoveButton = () => {
-    if (!animal.toBeAdopted) {
+    if (!(page == "adoptionAnimalPage")) {
       return (
         <TouchableOpacity style={styles.button} onPress={handleRemovePet}>
           <Text style={styles.buttonText}>Remover Pet</Text>
@@ -91,7 +97,7 @@ const AnimalInfo = ({ route, navigation }) => {
   };
   
   const renderAdoptionButton = () => {
-    if (!animal.toBeAdopted) {
+    if (!toBeAdopted) {
       return (
         <TouchableOpacity style={styles.button} onPress={() => update(animalId, "toBeAdopted")}>
           <Text style={styles.buttonText}>Colocar para adoção</Text>
@@ -102,7 +108,7 @@ const AnimalInfo = ({ route, navigation }) => {
   };
   
   const renderInteresteds = () => {
-    if (!animal.toBeAdopted) {
+    if (toBeAdopted) {
       return (
         <TouchableOpacity style={styles.button} onPress={handleInterested}>
           <Text style={styles.buttonText}>Ver interessados</Text>
@@ -166,10 +172,10 @@ const AnimalInfo = ({ route, navigation }) => {
         </View>
       </View>
       <View style={styles.buttons}>
-        {renderRemoveButton()}
-        {renderAdoptionButton()}
-        {renderInteresteds()}
-        {renderAdoptButton()}
+        {dataFetched && renderRemoveButton()}
+        {dataFetched && renderAdoptionButton()}
+        {dataFetched && renderInteresteds()}
+        {dataFetched && renderAdoptButton()}
       </View>
     </ScrollView>
   );

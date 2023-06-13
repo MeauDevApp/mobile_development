@@ -1,7 +1,8 @@
 import db from '../database/firebaseDb';
-import { collection, doc, query, where } from 'firebase/firestore';
+import { FieldPath, collection, doc, query, where } from 'firebase/firestore';
 import { getDocs, getDoc, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { createUserAnimal } from '../services/user_animal';
+import { getCurrentUser } from '../services/user';
 
 export const addAnimal = async (animal, user) => {
   const animalsCollection = collection(db, 'animals');
@@ -16,9 +17,9 @@ export const addAnimal = async (animal, user) => {
 
 export const getAnimalsForAdoption = async () => {
   var animals = [];
-  const q = query(collection(db, 'animals'), where("toBeAdopted", "==", true));
+  const q1 = query(collection(db, "animals"), where("toBeAdopted", "==", true));
 
-  await getDocs(q)
+  await getDocs(q1)
     .then((docs) => {
       docs.forEach((doc) => {
         animals.push(doc.data());
