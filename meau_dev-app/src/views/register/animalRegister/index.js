@@ -6,6 +6,7 @@ import AddPhoto from '../../../components/addPhoto';
 import { create as createAnimal } from '../../../../services/animal';
 import { storage } from '../../../../database/firebaseDb';
 import { ref, uploadBytes, uploadString } from 'firebase/storage';
+import { get, getCurrentUser } from '../../../../services/user';
 
 const AnimalRegisterScreen = ({ navigation }) => {
     const [checked1, setChecked1]   = useState(false);
@@ -38,14 +39,18 @@ const AnimalRegisterScreen = ({ navigation }) => {
     const [size, setSize]           = useState('');
     const [age, setAge]             = useState('');
     const [file, setFile]           = useState({ imagePath: 'animals/', base64: '' });
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const aleatoryNumber = getRandomNumber(0, 10000);
         const imageRef = file.imagePath + name + aleatoryNumber;
-        const animal = { name, specie, gender, size, age, temperance, guard, health, imageRef };
-        const user = { name: "Octavio Augusto"} // use authenticated username
-
+        const userId = (await getCurrentUser()).uid;
+        const userName = await get(userId).name;
+        const user = {user: userName}
+        const animal = { name, specie, gender, size, age, temperance, guard, health, imageRef, adopted : false };
         createAnimal(animal, user);
+        if (file.base64)
+            sendPhoto(imageRef);
         sendPhoto(imageRef);
         cleanAnimalFields();
     };
@@ -100,6 +105,8 @@ const AnimalRegisterScreen = ({ navigation }) => {
         setChecked05(false);
         setChecked06(false);
         setChecked07(false);
+        setFormSubmitted(true);
+        setFile({ imagePath: 'animals/', base64: '' });
     };
 
     const getRandomNumber = (min, max) => {
@@ -126,7 +133,7 @@ const AnimalRegisterScreen = ({ navigation }) => {
                     onChangeText={setName}
                 />
                 <Text>Fotos do animal</Text>
-                <AddPhoto onValueChange={handleImageChange} />
+                <AddPhoto onValueChange={handleImageChange} formSubmitted={formSubmitted} />
                 <RadioButton.Group onValueChange={specie => setSpecie(specie)} value={specie}>
                     <Text>Espécie</Text>
                     <View style={styles.row}>

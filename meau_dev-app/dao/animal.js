@@ -1,14 +1,14 @@
 import db from '../database/firebaseDb';
-import { collection, doc, query, where } from 'firebase/firestore';
+import { FieldPath, collection, doc, query, where } from 'firebase/firestore';
 import { getDocs, getDoc, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { createUserAnimal } from '../services/user_animal';
+import { getCurrentUser } from '../services/user';
 
 export const addAnimal = async (animal, user) => {
   const animalsCollection = collection(db, 'animals');
   await addDoc(animalsCollection, animal)
   .then((docs) => {
     console.log("Document successfully written!");
-    console.log("idAnimal", docs.id)
     createUserAnimal(user, animal, docs.id);
   }).catch((error) => {
     console.log("error", error);
@@ -17,9 +17,9 @@ export const addAnimal = async (animal, user) => {
 
 export const getAnimalsForAdoption = async () => {
   var animals = [];
-  const q = query(collection(db, 'animals'), where("adopted", "==", "false"));
+  const q1 = query(collection(db, "animals"), where("toBeAdopted", "==", true));
 
-  await getDocs(q)
+  await getDocs(q1)
     .then((docs) => {
       docs.forEach((doc) => {
         animals.push(doc.data());
@@ -59,11 +59,25 @@ export const getAnimal = async (id) => {
   }
 };
 
+export const getAnimalByName = async (name) => {
+  var animals = [];
+  const q = query(collection(db, 'animals'), where("name", "==", name));
+  await getDocs(q)
+    .then((docs) => {
+      docs.forEach((doc) => {
+        animals.push(doc.data(), doc.id);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return animals;
+}
+
 export const removeAnimal = async (id) => {
   try {
     const animalDoc = doc(db, 'animals', id);
-
-    await deleteDoc(animalDoc);    
+    await deleteDoc(animalDoc);
     console.log('animal successfully deleted!');
   } catch (error) {
     console.error('Error removing animal: ', error);
@@ -73,8 +87,17 @@ export const removeAnimal = async (id) => {
 export const updateAnimal = async (id, data) => {
   try {
     const animalDoc = doc(db, 'animals', id);
-    console.log(data);
     await updateDoc(animalDoc, data);
+    console.log('animal successfully updated!');
+  } catch (error) {
+    console.error('Error updating animal: ', error);
+  }
+};
+
+export const AdoptedUpdateAnimal = async (id) => {
+  try {
+    const animalDoc = doc(db, 'animals', id);
+    await updateDoc(animalDoc, { toBeAdopted: true });
     console.log('animal successfully updated!');
   } catch (error) {
     console.error('Error updating animal: ', error);

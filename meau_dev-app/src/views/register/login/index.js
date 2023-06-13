@@ -7,7 +7,6 @@ import { storeToken } from '../../../../redux/actions/storeToken';
 import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/Entypo';
 import styles from './styles.style';
-import { updateTimestamp } from '../../../../services/user';
 
 const Login = ({ navigation, actions }) => {
   const [email, setEmail] = useState('');
@@ -25,7 +24,7 @@ const Login = ({ navigation, actions }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const token = userCredential.user.accessToken;
-        // updateTimestamp(userCredential);
+        console.log(actions.storeToken(token))
         actions.storeToken(token);
         navigation.navigate('Home');
       })

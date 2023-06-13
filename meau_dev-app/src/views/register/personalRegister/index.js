@@ -19,6 +19,7 @@ const PersonalRegisterScreen = ({ navigation }) => {
   const [state, setState] = useState('');
   const [user, setUser] = useState({});
   const [file, setFile] = useState({ imagePath: 'animals/', base64: '' });
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleRegister = () => {
     const aleatoryNumber = getRandomNumber(0, 10000);
@@ -26,7 +27,9 @@ const PersonalRegisterScreen = ({ navigation }) => {
     const user = { name, username,  age,  password, email, city, phone, address, state, imageRef } 
 
     createUser(user);
-    sendPhoto(imageRef);
+    if (file.base64)
+      sendPhoto(imageRef);
+
     cleanUserFields();
   };
 
@@ -50,6 +53,8 @@ const PersonalRegisterScreen = ({ navigation }) => {
     setAddress('');
     setState('');
     setUser({});
+    setFormSubmitted(true);
+    setFile({ imagePath: 'animals/', base64: '' });
   };
 
   const handleImageChange = (image) => {
@@ -133,8 +138,7 @@ const PersonalRegisterScreen = ({ navigation }) => {
           onChangeText={setPassword}
           />
         <Text style={styles.registerTitle}>Foto de perfil</Text>
-        <AddPhoto onValueChange={handleImageChange} />
-        {/* <Button needAuth="true" text="Fazer Cadastro" type="greenButton" /> */}
+        <AddPhoto onValueChange={handleImageChange} formSubmitted={formSubmitted} />
         <TouchableOpacity style={styles.button}
           onPress={() => {handleRegister(), navigation.navigate('Home')}} >
           <Text style={styles.buttonText} >Fazer Cadastro </Text>
