@@ -89,7 +89,7 @@ const AnimalInfo = ({ route, navigation }) => {
     }
     return null;
   };
-  
+
   const renderAdoptionButton = () => {
     if (!animal.toBeAdopted) {
       return (
@@ -100,7 +100,7 @@ const AnimalInfo = ({ route, navigation }) => {
     }
     return null;
   };
-  
+
   const renderInteresteds = () => {
     if (!animal.toBeAdopted) {
       return (
@@ -118,54 +118,63 @@ const AnimalInfo = ({ route, navigation }) => {
         <Image style={styles.image} source={{ uri: animal.imageBase64 }} />
         <Text style={styles.namePet}>{animal.name}</Text>
         <SafeAreaView style={styles.alingItems}>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Sexo</Text>
             <Text style={styles.content}>{gender}</Text>
           </View>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Porte</Text>
             <Text style={styles.content}>{size}</Text>
           </View>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Idade</Text>
             <Text style={styles.content}>{age}</Text>
           </View>
         </SafeAreaView>
-        <Text style={styles.label}>Localização</Text>
-        <Text style={styles.content}>TODO</Text>
+        <SafeAreaView>
+          <View style={styles.column}>
+            <Text style={styles.label}>Localização</Text>
+            <Text style={styles.content}>TODO</Text>
+          </View>
+        </SafeAreaView>
         <SafeAreaView style={styles.alingItems}>
-          <View >
+          <View style={styles.column}>
             <Text style={styles.label} >Castrado</Text>
             <Text style={styles.content}>{castrated ? 'Sim' : 'Não'}</Text>
           </View>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Vermificado</Text>
             <Text style={styles.content}>{dewormed ? 'Sim' : 'Não'}</Text>
           </View>
         </SafeAreaView>
         <SafeAreaView style={styles.alingItems}>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Vacinado</Text>
             <Text style={styles.content}>{vaccinated ? 'Sim' : 'Não'}</Text>
           </View>
-          <View>
+          <View style={styles.column}>
             <Text style={styles.label}>Doenças</Text>
             <Text style={styles.content}>{sick ? 'Sim' : 'Não'}</Text>
           </View>
         </SafeAreaView>
-        <View >
+        <View style={styles.column}>
           <Text style={styles.label}>Temperamento</Text>
           <Text style={styles.content}>{playful}, {calm}, {shy}</Text>
+        </View>
+        <View style={styles.column}>
           <Text style={styles.label}>O {animal.name} precisa de</Text>
           <Text style={styles.content}>TODO</Text>
+        </View>
+        <View style={styles.column}>
           <Text style={styles.label}>Exigências do doador</Text>
           <Text style={styles.content}>TODO</Text>
+        </View>
+        <View style={styles.column}>
           <Text style={styles.label}>Mais sobre {animal.name}</Text>
           <Text style={styles.content}>TODO</Text>
-
         </View>
       </View>
-      <View style={styles.buttons}>
+      <View style={styles.alingItems}>
         {renderRemoveButton()}
         {renderAdoptionButton()}
         {renderInteresteds()}

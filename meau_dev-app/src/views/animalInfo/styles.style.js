@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     backgroundColor: "#fafafa",
+    padding: 10,
   },
   image: {
     width: "100%",
@@ -23,8 +24,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: 'bold',
   },
+  imageContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
   button: {
-    width: '40%',
+    width: '32%',
     height: 40,
     backgroundColor: '#88c9bf',
     borderRadius: 3,
@@ -32,15 +38,14 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'center',
     justifyContent: 'center',
     color: '#434343',
   },
-  buttons: {
+  alingItems: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+    justifyContent: 'space-around',
   },
   label: {
     fontSize: 14,
@@ -48,10 +53,16 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_400Regular",
   },
   content: {
-    marginBottom: 10,
     color: '#757575',
     fontSize: 16,
-  }
+  },
+  column: {
+    flex: 1,
+    paddingLeft: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingRight: 0 
+  },
 });
 
 export default styles;
