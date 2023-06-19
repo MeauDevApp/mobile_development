@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { HeaderBackButton } from '@react-navigation/stack';
 import { verifyToken, signOut } from "../../services/user";
 import DrawerNavigation from "./drawerNavigation";
+import { Ionicons } from "@expo/vector-icons";
+import { Button } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,26 +26,7 @@ export const Router = ({ navigation }) => {
   }, [userToken, navigationState]);
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        headerLeft: () => (
-          <HeaderBackButton
-            onPress={() => navigation.goBack()}
-            tintColor="black"
-          />
-        ),
-        headerRight: () => (
-          <Ionicons
-            name="menu"
-            size={24}
-            color="black"
-            style={{ marginRight: 15 }}
-            onPress={() => navigation.openDrawer()}
-          />
-        ),
-      }}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Drawer">
         {(props) => <DrawerNavigation {...props} isValidToken={isValidToken} />}
       </Stack.Screen>
