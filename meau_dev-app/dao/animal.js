@@ -1,23 +1,38 @@
 import db from '../database/firebaseDb';
-import { FieldPath, collection, doc, query, where } from 'firebase/firestore';
+import { arrayUnion, collection, doc, query, where } from 'firebase/firestore';
 import { getDocs, getDoc, addDoc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { createUserAnimal } from '../services/user_animal';
 import { getCurrentUser } from '../services/user';
 
-export const addAnimal = async (animal, user) => {
+export const addAnimal = async (animal) => {
   const animalsCollection = collection(db, 'animals');
+
   await addDoc(animalsCollection, animal)
   .then((docs) => {
     console.log("Document successfully written!");
-    createUserAnimal(user, animal, docs.id);
   }).catch((error) => {
     console.log("error", error);
   });
 };
 
+export const updateAnimalInterestedPeople = async (id, animal) => {
+  const animalDoc = doc(db, 'animals', id);
+  const uid = getCurrentUser() ? getCurrentUser().uid : null;
+
+  try {
+    await updateDoc(animalDoc, {
+      interestedPeople: arrayUnion(uid)
+    });
+
+    console.log("Array updated successfully!");
+  } catch (error) {
+    console.error("Error updating array:", error);
+  }
+};
+
 export const getAnimalsForAdoption = async () => {
   var animals = [];
-  const q1 = query(collection(db, "animals"), where("toBeAdopted", "==", true));
+  const uid = getCurrentUser() ? getCurrentUser().uid : null;
+  const q1 = query(collection(db, "animals"),where("toBeAdopted", "==", true),where("user_id", "!=", uid));
 
   await getDocs(q1)
     .then((docs) => {
@@ -94,10 +109,10 @@ export const updateAnimal = async (id, data) => {
   }
 };
 
-export const AdoptedUpdateAnimal = async (id) => {
+export const AdoptedUpdateAnimal = async (id, condition) => {
   try {
     const animalDoc = doc(db, 'animals', id);
-    await updateDoc(animalDoc, { toBeAdopted: true });
+    await updateDoc(animalDoc, { toBeAdopted: condition });
     console.log('animal successfully updated!');
   } catch (error) {
     console.error('Error updating animal: ', error);

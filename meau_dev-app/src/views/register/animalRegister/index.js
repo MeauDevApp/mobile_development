@@ -42,26 +42,32 @@ const AnimalRegisterScreen = ({ navigation }) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const handleRegister = async () => {
+        const animal = await getAnimalJSON();
+        console.log(animal)
+        createAnimal(animal);
+
+        cleanAnimalFields();
+        if (file.base64) sendPhoto(animal.imageRef);
+    };
+
+    const getAnimalJSON = async () => {
         const aleatoryNumber = getRandomNumber(0, 10000);
         const imageRef = file.imagePath + name + aleatoryNumber;
-        const userId = (await getCurrentUser()).uid;
-        const userName = await get(userId).name;
-        const user = {user: userName}
-        const animal = { name, specie, gender, size, age, temperance, guard, health, imageRef, adopted : false };
-        createAnimal(animal, user);
-        if (file.base64)
-            sendPhoto(imageRef);
-        sendPhoto(imageRef);
-        cleanAnimalFields();
+        const userId = getCurrentUser().uid;
+
+        return { name, specie, gender, size, age, temperance, guard, health, imageRef, toBeAdopted : false, user_id: userId, interestedPeople: [] };
     };
 
     const sendPhoto = async (imageRef) => {
+        console.log(imageRef)
         await uploadString(ref(storage, imageRef), file.base64, 'base64')
         .then((snapshot) => {
             console.log('File uploaded successfully!');
         }).catch((error) => {
             console.error('Error uploading file:', error);
         });
+
+        setFile({ imagePath: 'animals/', base64: '' });
     };
 
     const handleImageChange = (image) => {
@@ -106,7 +112,6 @@ const AnimalRegisterScreen = ({ navigation }) => {
         setChecked06(false);
         setChecked07(false);
         setFormSubmitted(true);
-        setFile({ imagePath: 'animals/', base64: '' });
     };
 
     const getRandomNumber = (min, max) => {

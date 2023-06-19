@@ -6,6 +6,7 @@ import {
   getAnimals,
   removeAnimal,
   updateAnimal,
+  updateAnimalInterestedPeople,
 } from "../dao/animal";
 import db from '../database/firebaseDb';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -13,9 +14,9 @@ import { storage } from "../database/firebaseDb";
 import { createUserAnimal } from "./user_animal";
 import { collection, getDocs, updateDoc } from "firebase/firestore";
 
-export const create = async (animal, user) => {
+export const create = async (animal) => {
   try {
-    addAnimal(animal, user);
+    addAnimal(animal);
   } catch (error) {
     console.log(error);
   }
@@ -37,9 +38,19 @@ export const remove = (id) => {
   return removeAnimal(id);
 };
 
+export const updatedInterested = async (id) => {
+  updateAnimalInterestedPeople(id);
+};
+
+export const removeAdoptionPet = (id) => {
+  return AdoptedUpdateAnimal(id, false);
+};
+
 export const update = (id, data) => {
+  console.log(data)
+  console.log(data === "toBeAdopted")
   return (data === "toBeAdopted") 
-  ? AdoptedUpdateAnimal(id)
+  ? AdoptedUpdateAnimal(id, true)
   : updateAnimal(id, data);
 };
 
