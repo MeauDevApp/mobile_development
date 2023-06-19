@@ -43,7 +43,6 @@ const AnimalRegisterScreen = ({ navigation }) => {
 
     const handleRegister = async () => {
         const animal = await getAnimalJSON();
-        console.log(animal)
         createAnimal(animal);
 
         cleanAnimalFields();

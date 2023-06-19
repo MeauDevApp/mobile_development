@@ -5,6 +5,7 @@ import { getByName, remove, removeAdoptionPet, updatedInterested } from "../../.
 import { update } from "../../../services/animal";
 import CustomModal from "../../components/modal";
 import styles from "./styles.style";
+import { getInterestedPeople } from "../../../services/user";
 
 const AnimalInfo = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,13 +28,13 @@ const AnimalInfo = ({ route, navigation }) => {
   const [calm, setCalm] = useState('');
   const [toBeAdopted, setToBeAdopted] = useState('');
   const [dataFetched, setDataFetched] = useState(false);
+  const [interestedPeople, setInterestedPeople] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         try {
           const animalsData = await getByName(animal.name)
-          console.log(animalsData)
           setAnimalDetails(animalsData[0])
           setAnimalId(animalsData[1]);
           setDataFetched(true);
@@ -47,7 +48,6 @@ const AnimalInfo = ({ route, navigation }) => {
   );
 
   const setAnimalDetails = (animal) => {
-    console.log("entrou", animal)
     setAge(animal.age);
     setSize(animal.size);
     setGender(animal.gender);
@@ -221,7 +221,7 @@ const AnimalInfo = ({ route, navigation }) => {
         {dataFetched && renderInteresteds()}
         {dataFetched && renderAdoptButton()}
         {dataFetched && renderTakeOffButton()}
-        <CustomModal visible={modalVisible} array={animal.interestedPeople} onClose={closeModal} />
+        <CustomModal visible={modalVisible} userIds={animal.interestedPeople} onClose={closeModal} imageArray={true} />
       </View>
     </ScrollView>
   );

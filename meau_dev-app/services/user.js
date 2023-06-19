@@ -1,5 +1,7 @@
+import { getDownloadURL, ref } from "firebase/storage";
 import { addUser, getUser, getUsers, removeUser, updateUser } from "../dao/user";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { storage } from "../database/firebaseDb";
 
 const auth = getAuth();
 
@@ -118,4 +120,50 @@ export const signOut = async () => {
     .catch((error) => {
       console.log('Error signing out:', error);
     });
+};
+
+const blobToBase64 = (blob) => {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+export const getImageBase64 = async (path) => {
+  if (!path) return null;
+
+  try {
+    const reference = ref(storage, path);
+    const url = await getDownloadURL(reference);
+
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const base64 = await blobToBase64(blob);
+
+    return base64;
+  } catch (error) {
+    console.log("Error retrieving image from Firebase Storage:", error);
+    return "";
+  }
+};
+
+export const getInterestedPeople = async (userIds) => {
+  var users = [];
+  console.log(userIds)
+
+  for (const uid of userIds) {
+    var imageBase64 = "";
+    const user = await getUser(uid);
+    console.log(uid)
+    console.log(user)
+    if (user.imageRef)
+      imageBase64 = await getImageBase64(user.imageRef);
+
+    users.push( { ...user, imageBase64 } );
+  };
+
+  console.log(users)
+
+  return users;
 };

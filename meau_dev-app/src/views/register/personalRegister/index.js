@@ -18,28 +18,34 @@ const PersonalRegisterScreen = ({ navigation }) => {
   const [address, setAddress] = useState('');
   const [state, setState] = useState('');
   const [user, setUser] = useState({});
-  const [file, setFile] = useState({ imagePath: 'animals/', base64: '' });
+  const [file, setFile] = useState({ imagePath: 'users/', base64: '' });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    const user = await getUserJSON();
+    createUser(user);
+
+    // cleanUserFields();
+    if (file.base64) sendPhoto(user.imageRef);
+  };
+
+  const getUserJSON = async () => {
     const aleatoryNumber = getRandomNumber(0, 10000);
     const imageRef = file.imagePath + name + aleatoryNumber;
-    const user = { name, username,  age,  password, email, city, phone, address, state, imageRef } 
 
-    createUser(user);
-    if (file.base64)
-      sendPhoto(imageRef);
-
-    cleanUserFields();
-  };
+    return { name, username,  age,  password, email, city, phone, address, state, imageRef }
+};
 
   const sendPhoto = async (imageRef) => {
     await uploadString(ref(storage, imageRef), file.base64, 'base64')
     .then((snapshot) => {
+        console.log(imageRef)
         console.log('File uploaded successfully!');
     }).catch((error) => {
         console.error('Error uploading file:', error);
     });
+
+    setFile({ imagePath: 'users/', base64: '' });
   };
 
   const cleanUserFields = () => {
@@ -54,7 +60,6 @@ const PersonalRegisterScreen = ({ navigation }) => {
     setState('');
     setUser({});
     setFormSubmitted(true);
-    setFile({ imagePath: 'animals/', base64: '' });
   };
 
   const handleImageChange = (image) => {
