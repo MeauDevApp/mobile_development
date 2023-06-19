@@ -17,8 +17,7 @@ export const Router = ({ navigation }) => {
 
   useEffect(() => {
     const verifyUserToken = async () => {
-      const tokenIsValid = true;
-      // const tokenIsValid = await verifyToken(userToken);
+      const tokenIsValid = await verifyToken(userToken);
       setIsValidToken(tokenIsValid);
     };
 

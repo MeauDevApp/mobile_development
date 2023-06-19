@@ -46,7 +46,7 @@ const CustomHeaderRight = () => {
   );
 };
 
-export const CustomDrawerContent = ({ navigation, state, ...props }) => {
+export const CustomDrawerContent = ({ actions, navigation, state, ...props }) => {
   const handleSignOut = async () => {
     await actions.signOut();
   };
