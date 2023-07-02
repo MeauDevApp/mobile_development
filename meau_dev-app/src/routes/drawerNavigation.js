@@ -14,9 +14,11 @@ import AnimalInfo from "../views/AnimalInfo";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { signOut } from "../../redux/actions/signOut";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { Button, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Chat from "../views/chat";
+import Chats from "../views/chats";
 
 const Drawer = createDrawerNavigator();
 
@@ -46,7 +48,12 @@ const CustomHeaderRight = () => {
   );
 };
 
-export const CustomDrawerContent = ({ actions, navigation, state, ...props }) => {
+export const CustomDrawerContent = ({
+  actions,
+  navigation,
+  state,
+  ...props
+}) => {
   const handleSignOut = async () => {
     await actions.signOut();
   };
@@ -54,7 +61,7 @@ export const CustomDrawerContent = ({ actions, navigation, state, ...props }) =>
   return (
     <DrawerContentScrollView {...props}>
       {state.routeNames.map((routeName, index) => {
-        if (routeName === 'Informação Animal') {
+        if (routeName === "Informação Animal" || routeName === "Chat") {
           return null;
         }
 
@@ -69,7 +76,7 @@ export const CustomDrawerContent = ({ actions, navigation, state, ...props }) =>
       <DrawerItem label="Sair" onPress={handleSignOut} />
     </DrawerContentScrollView>
   );
-}
+};
 
 const NotAuthUserDrawerNavigation = () => {
   return (
@@ -106,12 +113,22 @@ const DrawerNavigation = ({ isValidToken, actions }) => {
         />
         <Drawer.Screen name="Meus Pets" component={MyAnimals} />
         <Drawer.Screen name="Adotar um Pet" component={PetAdoption} />
-        <Drawer.Screen name="Informação Animal" component={AnimalInfo}
+        <Drawer.Screen
+          name="Informação Animal"
+          component={AnimalInfo}
           options={{
             headerLeft: () => <CustomHeaderLeft />,
             headerRight: () => <CustomHeaderRight />,
           }}
         />
+        <Drawer.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            headerLeft: () => <CustomHeaderLeft />,
+          }}
+        />
+        <Drawer.Screen name="Chats" component={Chats} />
       </Drawer.Navigator>
     );
   } else {

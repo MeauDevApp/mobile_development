@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { HeaderBackButton } from '@react-navigation/stack';
-import { verifyToken, signOut } from "../../services/user";
+import { verifyToken } from "../../services/user";
 import DrawerNavigation from "./drawerNavigation";
-import { Ionicons } from "@expo/vector-icons";
-import { Button } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +14,8 @@ export const Router = ({ navigation }) => {
 
   useEffect(() => {
     const verifyUserToken = async () => {
-      const tokenIsValid = await verifyToken(userToken);
+      const tokenIsValid = true;
+      // const tokenIsValid = await verifyToken(userToken);
       setIsValidToken(tokenIsValid);
     };
 

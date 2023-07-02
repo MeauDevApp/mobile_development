@@ -47,11 +47,27 @@ export const removeAdoptionPet = (id) => {
 };
 
 export const update = (id, data) => {
-  console.log(data)
-  console.log(data === "toBeAdopted")
   return (data === "toBeAdopted") 
   ? AdoptedUpdateAnimal(id, true)
   : updateAnimal(id, data);
+};
+
+export const searchAdoptionAnimals = async (field, data) => {
+  var animals = [];
+  const uid = getCurrentUser() ? getCurrentUser().uid : null;
+  const q1 = query(collection(db, "animals"),where(field, "==", value), where("user_id", "!=", uid));
+
+  await getDocs(q1)
+    .then((docs) => {
+      docs.forEach((doc) => {
+        animals.push(doc.data());
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  return animals;
 };
 
 const blobToBase64 = (blob) => {

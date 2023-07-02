@@ -1,14 +1,14 @@
 import { getDownloadURL, ref } from "firebase/storage";
-import { addUser, getUser, getUsers, removeUser, updateUser } from "../dao/user";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUser, getUser, getUsers, removeUser, updateUser } from "../dao/user";
+import { getAuth } from "firebase/auth";
 import { storage } from "../database/firebaseDb";
+import CryptoJS from 'crypto-js';
 
 const auth = getAuth();
 
-export const create = async (user) => {
+export const create = (user) => {
   try {
-    const uid = await createUserInAuthEntity(user.email, user.password);
-    await addUser(user, uid);
+    createUser(user);
   } catch (error) {
     console.log("Error:", error);
   }
@@ -101,17 +101,6 @@ export const verifyToken = async (userToken) => {
   }
 };
 
-export const createUserInAuthEntity = async (email, password) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user.uid;
-
-  } catch (error) {
-    console.log('Sign-up error:', error);
-    throw new Error('Failed to sign up in auth service.');
-  }
-};
-
 export const signOut = async () => {
   await signOut(auth)
     .then(() => {
@@ -150,20 +139,33 @@ export const getImageBase64 = async (path) => {
 
 export const getInterestedPeople = async (userIds) => {
   var users = [];
-  console.log(userIds)
 
   for (const uid of userIds) {
     var imageBase64 = "";
     const user = await getUser(uid);
-    console.log(uid)
-    console.log(user)
+
     if (user.imageRef)
       imageBase64 = await getImageBase64(user.imageRef);
 
-    users.push( { ...user, imageBase64 } );
+    users.push( { ...user, imageBase64, uid } );
   };
-
-  console.log(users)
 
   return users;
 };
+
+export const getChatUsers = async () => {
+  const currentUserDoc = await getUser(getCurrentUser().uid);
+  console.log(currentUserDoc);
+  console.log(currentUserDoc.chatUsers);
+  return currentUserDoc.chatUsers;
+};
+
+export const computeHash = (senderId, receiverId) => {
+  const sortedUserIds = [senderId, receiverId].sort();
+  console.log(sortedUserIds);
+  const inputString = sortedUserIds.join('');
+  const hash = CryptoJS.SHA256(inputString);
+  const hashString = hash.toString(CryptoJS.enc.Hex);
+
+  return hashString;
+}

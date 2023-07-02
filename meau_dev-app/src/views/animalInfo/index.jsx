@@ -44,10 +44,11 @@ const AnimalInfo = ({ route, navigation }) => {
         }
       }
       fetchData();
-    }, [dataFetched])
+    }, [dataFetched, animal])
   );
 
   const setAnimalDetails = (animal) => {
+    console.log(animal)
     setAge(animal.age);
     setSize(animal.size);
     setGender(animal.gender);

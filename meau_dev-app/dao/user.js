@@ -1,6 +1,8 @@
 import db from '../database/firebaseDb';
 import { collection, doc } from 'firebase/firestore';
 import { getDocs, getDoc, deleteDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 export const addUser = async (user, uid) => {
   const userDocRef = doc(db, 'users', uid);
@@ -36,7 +38,6 @@ export const getUser = async (id) => {
   if (userDoc.exists()) {
     console.log(userDoc.data())
     return userDoc.data();
-
   }
   else {
     console.log('No such document!');
@@ -62,5 +63,27 @@ export const updateUser = async (id, data) => {
     console.log('User successfully updated!');
   } catch (error) {
     console.error('Error updating user: ', error);
+  }
+};
+
+export const createUser = async (user) => {
+  try {
+    
+    const auth = getAuth();
+    const database = getDatabase();
+    
+    const userCredential = await createUserWithEmailAndPassword(auth, user.email, user.password);    
+    const userAuth = userCredential.user;
+    await addUser(user, userAuth.uid);
+
+    const displayName = user.name;
+    const photoURL = user.imageRef;
+
+    await updateProfile(userAuth, { displayName, photoURL });
+    const userRef = ref(database, `users/${userAuth.uid}`);
+    await set(userRef, { displayName, photoURL });
+
+  } catch (error) {
+    console.log("Error creating user with profile:", error);
   }
 };

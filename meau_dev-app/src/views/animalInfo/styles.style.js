@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
-  },
+  }
 });
 
 export default styles;

@@ -23,10 +23,17 @@ const PersonalRegisterScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     const user = await getUserJSON();
-    createUser(user);
 
-    // cleanUserFields();
-    if (file.base64) sendPhoto(user.imageRef);
+    try {
+      createUser(user);
+      if (file.base64) sendPhoto(user.imageRef);
+
+      cleanUserFields();
+    }
+    catch(error) {
+      console.log("Error: ", error)
+    }
+
   };
 
   const getUserJSON = async () => {

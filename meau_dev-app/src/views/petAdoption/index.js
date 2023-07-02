@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { getImageBase64 } from "../../../services/animal";
 import { getAdoptionPets } from "../../../services/user_animal";
+import Filters from "../../components/Filters";
 import AnimalCard from "../../components/animalCard";
 import styles from "./styles.style";
 
@@ -31,7 +32,7 @@ const PetAdoption = ({ navigation }) => {
               return { ...animal, imageBase64 };
             })
           );
-          console.log(animalsWithImages);
+
           setAnimals(animalsWithImages);
           setLoading(false);
         } catch (error) {
@@ -53,6 +54,7 @@ const PetAdoption = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+      {/* <Filters /> */}
       {animals.length > 0 &&
         animals.map((animal, index) => (
           <View key={index} style={styles.pets}>

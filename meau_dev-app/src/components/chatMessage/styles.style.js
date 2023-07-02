@@ -1,0 +1,127 @@
+import { StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  body: {
+    backgroundColor: '#282c34',
+  },
+  app: {
+    textAlign: 'center',
+    maxWidth: 728,
+    margin: '0 auto',
+  },
+  header: {
+    backgroundColor: '#181717',
+    height: '10vh',
+    minHeight: 50,
+    color: 'white',
+    position: 'fixed',
+    width: '100%',
+    maxWidth: 728,
+    top: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    zIndex: 99,
+    padding: 10,
+    boxSizing: 'border-box',
+  },
+  section: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    backgroundColor: 'rgb(40, 37, 53)',
+  },
+  main: {
+    padding: 10,
+    height: '80vh',
+    margin: '10vh 0 10vh',
+    overflowY: 'scroll',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  form: {
+    height: '10vh',
+    position: 'fixed',
+    bottom: 0,
+    backgroundColor: 'rgb(24, 23, 23)',
+    width: '100%',
+    maxWidth: 728,
+    display: 'flex',
+    fontSize: '1.5rem',
+  },
+  formButton: {
+    width: '20%',
+    backgroundColor: 'rgb(56, 56, 143)',
+  },
+  input: {
+    lineHeight: 1.5,
+    width: '100%',
+    fontSize: '1.5rem',
+    background: 'rgb(58, 58, 58)',
+    color: 'white',
+    outline: 'none',
+    border: 'none',
+    padding: '0 10px',
+  },
+  button: {
+    backgroundColor: '#282c34',
+    border: 'none',
+    color: 'white',
+    padding: 15,
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    cursor: 'pointer',
+    fontSize: '1.25rem',
+  },
+  disabledButton: {
+    opacity: 0.5,
+    cursor: 'not-allowed',
+  },
+  signIn: {
+    color: '#282c34',
+    background: 'white',
+    maxWidth: 400,
+    margin: '0 auto',
+  },
+  ul: {
+    textAlign: 'left',
+    listStyle: 'none',
+  },
+  li: {
+    textAlign: 'left',
+    listStyle: 'none',
+  },
+  p: {
+    maxWidth: 500,
+    marginBottom: 12,
+    lineHeight: 24,
+    padding: 10,
+    borderRadius: 25,
+    position: 'relative',
+    color: 'white',
+    textAlign: 'center',
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  sent: {
+    color: 'black',
+    background: '#0b93f6',
+    alignSelf: 'flex-end',
+  },
+  received: {
+    background: '#e5e5ea',
+    color: 'black',
+  },
+  image: {
+    width: '100%',
+    height: 40,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+});
+
+export default styles;
