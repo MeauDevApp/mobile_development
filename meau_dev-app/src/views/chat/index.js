@@ -18,14 +18,13 @@ import styles from "./styles.style";
 import { ActivityIndicator } from "react-native-paper";
 
 export default function Chat({ route, navigation }) {
-  console.log(route.params);
-
   const getChatId = (receiver) => {
     const computedHash = computeHash(currentUserId, receiverId);
     console.log(computedHash);
     return computedHash;
   };
 
+  console.log("route.params ", route.params);
   const [messages, setMessages] = useState([]);
   const currentUserName = getCurrentUser().displayName;
   const currentUserId = getCurrentUser().uid;
@@ -35,10 +34,12 @@ export default function Chat({ route, navigation }) {
   const parentCollectionRef = collection(db, "chats");
   const parentDocRef = doc(parentCollectionRef, subcollectionId);
   const subcollectionRef = collection(parentDocRef, subcollectionId);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getMessages() {
+      setMessages([]);
+
       const subcollectionSnapshot = await getDocs(subcollectionRef);
       const chatExists = !subcollectionSnapshot.empty;
 
@@ -58,8 +59,9 @@ export default function Chat({ route, navigation }) {
         await setDoc(parentDocRef, {});
       }
     }
-    getMessages();
-    setLoading(false);
+    getMessages().then(() => {
+      setLoading(false);
+    });
   }, [receiverId]);
 
   const sendMessage = useCallback(async (newMessages = []) => {
@@ -67,8 +69,8 @@ export default function Chat({ route, navigation }) {
       GiftedChat.append(previousMessages, newMessages)
     );
 
-    const parentCollectionRef21 = collection(db, "chats");
-    const subcollectionRef21 = doc(parentCollectionRef21, subcollectionId);
+    console.log("sendMessage");
+
     const { _id, createdAt, text, user } = newMessages[0];
     const docData = {
       _id,
@@ -86,33 +88,32 @@ export default function Chat({ route, navigation }) {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
   return (
     <>
-      {!loading && (
-        <GiftedChat
-          messages={messages}
-          placeholder="Escreva uma mensagem"
-          onSend={sendMessage}
-          user={{
-            _id: currentUserId,
-            name: currentUserName,
-          }}
-        />
-      )}
+      <GiftedChat
+        messages={messages}
+        placeholder="Escreva uma mensagem"
+        onSend={sendMessage}
+        user={{
+          _id: currentUserId,
+          name: currentUserName,
+        }}
+        loadEarlier={loading}
+        isLoadingEarlier={loading}
+        // renderLoading={() => {
+        //   return (
+        //     <View style={styles.loadingContainer}>
+        //       <ActivityIndicator size="large" color="#0000ff" />
+        //     </View>
+        //   );
+        // }}
+      />
 
-      {loading && messages.length === 0 && (
+      {/* {loading && messages.length === 0 && (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>Sem mensagens ainda!</Text>
         </View>
-      )}
+      )} */}
     </>
   );
 }

@@ -144,6 +144,7 @@ export const getInterestedPeople = async (userIds) => {
     var imageBase64 = "";
     const user = await getUser(uid);
 
+    console.log(user)
     if (user.imageRef)
       imageBase64 = await getImageBase64(user.imageRef);
 
@@ -155,17 +156,12 @@ export const getInterestedPeople = async (userIds) => {
 
 export const getChatUsers = async () => {
   const currentUserDoc = await getUser(getCurrentUser().uid);
-  console.log(currentUserDoc);
-  console.log(currentUserDoc.chatUsers);
   return currentUserDoc.chatUsers;
 };
 
 export const computeHash = (senderId, receiverId) => {
   const sortedUserIds = [senderId, receiverId].sort();
-  console.log(sortedUserIds);
   const inputString = sortedUserIds.join('');
-  const hash = CryptoJS.SHA256(inputString);
-  const hashString = hash.toString(CryptoJS.enc.Hex);
 
-  return hashString;
+  return inputString;
 }
