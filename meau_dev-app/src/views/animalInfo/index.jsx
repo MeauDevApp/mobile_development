@@ -6,6 +6,15 @@ import { update } from "../../../services/animal";
 import CustomModal from "../../components/modal";
 import styles from "./styles.style";
 import { getInterestedPeople } from "../../../services/user";
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const AnimalInfo = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -93,7 +102,28 @@ const AnimalInfo = ({ route, navigation }) => {
   const handleAdoptPet = () => {
     console.log('handleAdoptPet');
     updatedInterested(animalId);
+
   };
+
+  async function handleCallNotification() {
+    const { status } = await Notifications.getPermissionsAsync();
+    if(status != 'granted') {
+      alert('No permition');
+      return;
+    }
+    let token = (await Notifications.getExpoPushTokenAsync({
+      projectId: '2b293a45-c07c-449f-921a-512e786a6785'
+    })).data;
+
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: `Adoção ${animal.name}`,
+        body: "Tenho interesse em adotar seu pet",
+        
+      },
+      trigger: null,
+    });
+}
 
   const handleInterested = () => {
     setModalVisible(true);
@@ -102,7 +132,7 @@ const AnimalInfo = ({ route, navigation }) => {
   const renderAdoptButton = () => {
     if (page == "adoptionAnimalPage") {
       return (
-        <TouchableOpacity style={styles.button} onPress={handleAdoptPet}>
+        <TouchableOpacity style={styles.button} onPress={handleCallNotification}>
           <Text style={styles.buttonText}>Adotar pet</Text>
         </TouchableOpacity>
       );

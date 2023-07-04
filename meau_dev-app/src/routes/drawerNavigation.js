@@ -10,7 +10,6 @@ import PetAdoption from "../views/petAdoption";
 import HomeScreen from "../views/home/home";
 import MyAnimals from "../views/myAnimals";
 import Login from "../views/register/login";
-import AnimalInfo from "../views/AnimalInfo";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { signOut } from "../../redux/actions/signOut";
@@ -19,6 +18,7 @@ import { Button, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Chat from "../views/chat";
 import Chats from "../views/chats";
+import AnimalInfo from "../views/animalInfo";
 
 const Drawer = createDrawerNavigator();
 
