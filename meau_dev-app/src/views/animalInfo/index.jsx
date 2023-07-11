@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView, Image, View, Text, TouchableOpacity, SafeAreaView, ActivityIndicator } from "react-native";
-import { getByName, remove, removeAdoptionPet, updatedInterested } from "../../../services/animal";
+import { getByName, remove as removeAnimal, removeAdoptionPet, updatedInterested } from "../../../services/animal";
 import { update } from "../../../services/animal";
 import CustomModal from "../../components/modal";
 import styles from "./styles.style";
-import { getInterestedPeople } from "../../../services/user";
+import { getCurrentUser, getInterestedPeople, sendInterestMessage } from "../../../services/user";
 import * as Notifications from 'expo-notifications';
+import { showMessage } from 'react-native-flash-message';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -87,22 +88,84 @@ const AnimalInfo = ({ route, navigation }) => {
     setModalVisible(false);
   };
 
-  const handleRemovePet = () => {
-    removeAdoptionPet(animalId);
-    setLoading(true);
-    setDataFetched(false);
+  const handleWithDrawPet = () => {
+    try {
+      removeAdoptionPet(animalId);
+      setLoading(true);
+      setDataFetched(false);
+      showMessage({
+        message: 'Animal removido da lista de animais para adoção',
+        description: 'Remoção sucedida!',
+        type: 'success',
+      });
+    }
+    catch(error) {
+      showMessage({
+        message: 'Animal removido da lista de animais para adoção',
+        description: 'Remoção sucedida!',
+        type: 'info'
+      });
+    }
+  };
+  const handleRemovePet = (animalId) => {
+    try {
+      removeAnimal(animalId);
+      showMessage({
+        message: 'Animal removido da lista de animais para adoção',
+        description: 'Remoção sucedida!',
+        type: 'success',
+      });
+    }
+    catch(error) {
+      showMessage({
+        message: 'Animal removido da lista de animais para adoção',
+        description: 'Remoção sucedida!',
+        type: 'info',
+      });
+
+    }
   };
 
   const handleUpdate = () => {
-    update(animalId, "toBeAdopted");
-    setLoading(true);
-    setDataFetched(false);
+    try {
+      update(animalId, "toBeAdopted");
+      setLoading(true);
+      setDataFetched(false);
+      showMessage({
+        message: 'Animal adicionado à lista de animais para adoção registrado',
+        description: 'A criação do pedido foi um sucesso!',
+        type: 'success',
+      });
+    }
+    catch(error) {
+      showMessage({
+        message: 'Animal adicionado à lista de animais para adoção registrado',
+        description: 'A criação do pedido foi um sucesso!',
+        type: 'info',
+      });
+
+    }
   };
 
   const handleAdoptPet = () => {
     console.log('handleAdoptPet');
-    updatedInterested(animalId);
+    try {
+      updatedInterested(animalId);
+      showMessage({
+        message: 'Seu pedido de adoção foi registrado',
+        description: 'A criação do pedido foi um sucesso!',
+        type: 'success',
+      });
+      sendInterestMessage(animal.name, animal.user_id);
+    }
+    catch(error) {
+      showMessage({
+        message: 'Seu pedido de adoção foi registrado',
+        description: 'A criação do pedido foi um sucesso!',
+        type: 'info',
+      });
 
+    }
   };
 
   async function handleCallNotification() {
@@ -132,7 +195,10 @@ const AnimalInfo = ({ route, navigation }) => {
   const renderAdoptButton = () => {
     if (page == "adoptionAnimalPage") {
       return (
-        <TouchableOpacity style={styles.button} onPress={handleCallNotification}>
+        <TouchableOpacity style={styles.button} onPress={handleAdoptPet 
+        // && 
+        // handleCallNotification
+        }>
           <Text style={styles.buttonText}>Adotar pet</Text>
         </TouchableOpacity>
       );
@@ -143,7 +209,7 @@ const AnimalInfo = ({ route, navigation }) => {
   const renderRemoveButton = () => {
     if (!(page == "adoptionAnimalPage")) {
       return (
-        <TouchableOpacity style={styles.button} onPress={() => remove(animalId)}>
+        <TouchableOpacity style={styles.button} onPress={() => handleRemovePet(animalId)}>
           <Text style={styles.buttonText}>Remover Pet</Text>
         </TouchableOpacity>
       );
@@ -154,7 +220,7 @@ const AnimalInfo = ({ route, navigation }) => {
   const renderTakeOffButton = () => {
     if (!(page == "adoptionAnimalPage")) {
       return (
-        <TouchableOpacity style={styles.button} onPress={() => handleRemovePet()}>
+        <TouchableOpacity style={styles.button} onPress={() => handleWithDrawPet()}>
           <Text style={styles.buttonText}>Retirar da adoção</Text>
         </TouchableOpacity>
       );

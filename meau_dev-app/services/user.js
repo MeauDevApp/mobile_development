@@ -1,8 +1,15 @@
 import { getDownloadURL, ref } from "firebase/storage";
-import { createUser, getUser, getUsers, removeUser, updateUser } from "../dao/user";
+import {
+  createUser,
+  getUser,
+  getUsers,
+  removeUser,
+  updateUser,
+} from "../dao/user";
 import { getAuth } from "firebase/auth";
 import { storage } from "../database/firebaseDb";
-import CryptoJS from 'crypto-js';
+import db from "../database/firebaseDb";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const auth = getAuth();
 
@@ -50,8 +57,7 @@ export const tokenIsValid = async (token, lastLogin) => {
   const lastLoginTime = new Date(lastLogin).getTime();
   const timeDiffInHours = (currentTime - lastLoginTime) / (1000 * 60 * 60);
 
-  if (timeDiffInHours > 72 || !token || token.length == 0) 
-    return false;
+  if (timeDiffInHours > 72 || !token || token.length == 0) return false;
   else return true;
 };
 
@@ -91,12 +97,9 @@ export const verifyToken = async (userToken) => {
       await getAuth().signOut();
       // navigation.navigate("Login");
       return false;
-    }
-    else
-      return true;
-      // await currentUser.ref.update({ lastLoginAt: new Date().toISOString() });
-  } 
-  else {
+    } else return true;
+    // await currentUser.ref.update({ lastLoginAt: new Date().toISOString() });
+  } else {
     return false;
   }
 };
@@ -104,10 +107,10 @@ export const verifyToken = async (userToken) => {
 export const signOut = async () => {
   await signOut(auth)
     .then(() => {
-      console.log('User signed out successfully');
+      console.log("User signed out successfully");
     })
     .catch((error) => {
-      console.log('Error signing out:', error);
+      console.log("Error signing out:", error);
     });
 };
 
@@ -117,7 +120,7 @@ const blobToBase64 = (blob) => {
     reader.onloadend = () => resolve(reader.result);
     reader.readAsDataURL(blob);
   });
-}
+};
 
 export const getImageBase64 = async (path) => {
   if (!path) return null;
@@ -144,12 +147,12 @@ export const getInterestedPeople = async (userIds) => {
     var imageBase64 = "";
     const user = await getUser(uid);
 
-    console.log(user)
-    if (user.imageRef)
+    console.log(user);
+    if (user && user.imageRef)
       imageBase64 = await getImageBase64(user.imageRef);
 
-    users.push( { ...user, imageBase64, uid } );
-  };
+    users.push({ ...user, imageBase64, uid });
+  }
 
   return users;
 };
@@ -159,9 +162,58 @@ export const getChatUsers = async () => {
   return currentUserDoc.chatUsers;
 };
 
+const mapUser = (user) => {
+  return {
+    _id: user.uid,
+    name: user.displayName,
+    avatar: user.photoURL,
+  };
+}
+
+const getChatId = (receiverId) => {
+  const computedHash = computeHash(getCurrentUser().uid, receiverId);
+  return computedHash;
+};
+
+const generateRandomNumber = (min, max) => {
+  const randomDecimal = Math.random();
+  const randomNumber = min + randomDecimal * (max - min);
+  const roundedNumber = Math.floor(randomNumber);
+
+  return roundedNumber;
+};
+
+
+export const sendInterestMessage = async (name, ownerId) => {
+  console.log('sendInterestMessage')
+  const timestamp = new Date();
+
+  const subcollectionId = getChatId(ownerId);
+  console.log(subcollectionId);
+
+  const parentCollectionRef = collection(db, "chats");
+  const parentDocRef = doc(parentCollectionRef, subcollectionId);
+  const subcollectionRef = collection(parentDocRef, subcollectionId);
+
+  try {
+    const message = {
+      _id: generateRandomNumber(1, 10),
+      createdAt: timestamp,
+      text: `Olá, estou interessado no ${name}`,
+      user: mapUser(getCurrentUser()),
+    };
+
+    await setDoc(parentDocRef, {});
+    await addDoc(subcollectionRef, message);
+    console.log("Document successfully written!");
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 export const computeHash = (senderId, receiverId) => {
   const sortedUserIds = [senderId, receiverId].sort();
-  const inputString = sortedUserIds.join('');
+  const inputString = sortedUserIds.join("");
 
   return inputString;
-}
+};

@@ -10,8 +10,11 @@ const CustomModal = ({ visible, userIds, onClose, imageArray }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const users = await getInterestedPeople(userIds);
-        setInterestedPeople(users);
+        console.log(userIds);
+        if (userIds.length > 0) {
+          const users = await getInterestedPeople(userIds);
+          setInterestedPeople(users);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -64,7 +67,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray }) => {
               </React.Fragment>
             ))
           ) : (
-            <Text style={styles.item}>No interested people found.</Text>
+            <Text style={styles.item}>Não há pessoas interessadas no momento.</Text>
           )}
           </View>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>

@@ -4,6 +4,7 @@ import { create as createUser } from '../../../../services/user';
 import { ref, uploadString } from 'firebase/storage';
 import { storage } from '../../../../database/firebaseDb';
 import AddPhoto from '../../../components/addPhoto';
+import { showMessage } from 'react-native-flash-message';
 
 import styles from './styles.style';
 
@@ -26,12 +27,23 @@ const PersonalRegisterScreen = ({ navigation }) => {
 
     try {
       createUser(user);
+
+      showMessage({
+        message: 'Usuário criado',
+        description: 'A criação foi um sucesso!',
+        type: 'success',
+      });
+
       if (file.base64) sendPhoto(user.imageRef);
 
       cleanUserFields();
     }
     catch(error) {
-      console.log("Error: ", error)
+      showMessage({
+        message: 'Erro na criação do usuário',
+        description: 'Erro na criação!',
+        type: 'info',
+      });
     }
 
   };

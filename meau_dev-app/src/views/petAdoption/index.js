@@ -55,7 +55,7 @@ const PetAdoption = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       {/* <Filters /> */}
-      {animals.length > 0 &&
+      {animals.length > 0 ? (
         animals.map((animal, index) => (
           <View key={index} style={styles.pets}>
             <TouchableOpacity
@@ -69,7 +69,10 @@ const PetAdoption = ({ navigation }) => {
               <AnimalCard animal={animal} />
             </TouchableOpacity>
           </View>
-        ))}
+        ))
+      ) : (
+        <NoDataComponent entity={'animais'} />
+      )}
     </ScrollView>
   );
 };

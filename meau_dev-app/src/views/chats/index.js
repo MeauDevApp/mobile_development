@@ -40,19 +40,23 @@ const Chats = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {interestedPeople.map((user) => (
-        <View key={user.uid} style={styles.chats} >
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("Chat", {
-                receiverId: user.uid,
-              })
-            }
-          >
-            <UserCard user={user} />
-          </TouchableOpacity>
-        </View>
-      ))}
+      {interestedPeople.length > 0 ? (
+        interestedPeople.map((user) => (
+          <View key={user.uid} style={styles.chats} >
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Chat", {
+                  receiverId: user.uid,
+                })
+              }
+            >
+              <UserCard user={user} />
+            </TouchableOpacity>
+          </View>
+      ))
+    ) : (
+      <NoDataComponent entity={'chats'} />
+    )}
     </ScrollView>
   );
 };

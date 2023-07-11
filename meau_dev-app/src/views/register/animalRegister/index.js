@@ -7,6 +7,7 @@ import { create as createAnimal } from '../../../../services/animal';
 import { storage } from '../../../../database/firebaseDb';
 import { ref, uploadBytes, uploadString } from 'firebase/storage';
 import { get, getCurrentUser } from '../../../../services/user';
+import { showMessage } from 'react-native-flash-message';
 
 const AnimalRegisterScreen = ({ navigation }) => {
     const [checked1, setChecked1]   = useState(false);
@@ -42,11 +43,26 @@ const AnimalRegisterScreen = ({ navigation }) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const handleRegister = async () => {
-        const animal = await getAnimalJSON();
-        createAnimal(animal);
+        try {
+            const animal = await getAnimalJSON();
+            createAnimal(animal);
+            showMessage({
+                message: 'Animal criado',
+                description: 'A criação foi um sucesso!',
+                type: 'success',
+            });
+            
+            cleanAnimalFields();
+            if (file.base64) sendPhoto(animal.imageRef);
+        }
+        catch(error) {
+            showMessage({
+                message: 'Erro na criação do animal',
+                description: 'Erro na criação!',
+                type: 'info',
+            });
+        }
 
-        cleanAnimalFields();
-        if (file.base64) sendPhoto(animal.imageRef);
     };
 
     const getAnimalJSON = async () => {

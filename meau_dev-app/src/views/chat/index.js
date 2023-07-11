@@ -15,7 +15,7 @@ import { getCurrentUser, computeHash } from "../../../services/user";
 import Loading from "../../components/loading";
 
 export default function Chat({ route, navigation }) {
-  const getChatId = (receiver) => {
+  const getChatId = (receiverId) => {
     const computedHash = computeHash(getCurrentUser().uid, receiverId);
     return computedHash;
   };

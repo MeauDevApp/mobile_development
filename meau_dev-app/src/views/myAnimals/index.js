@@ -6,11 +6,13 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  Text
 } from "react-native";
 import { getImageBase64 } from "../../../services/animal";
 import { getUserPets } from "../../../services/user_animal";
 import AnimalCard from "../../components/animalCard";
 import styles from "./styles.style";
+import NoDataComponent from "../../components/noDataComponent";
 
 const MyAnimals = ({ navigation }) => {
   const [animals, setAnimals] = useState([]);
@@ -52,7 +54,7 @@ const MyAnimals = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {animals.length > 0 &&
+      {animals.length > 0 ? (
         animals.map((animal, index) => (
           <View key={index} style={styles.pets}>
             <TouchableOpacity
@@ -66,7 +68,10 @@ const MyAnimals = ({ navigation }) => {
               <AnimalCard animal={animal} />
             </TouchableOpacity>
           </View>
-        ))}
+        ))
+      ) : (
+        <NoDataComponent entity={'animais'} />
+      )}
     </ScrollView>
   );
 };
