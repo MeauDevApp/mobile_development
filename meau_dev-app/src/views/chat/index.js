@@ -1,5 +1,5 @@
-import { GiftedChat } from "react-native-gifted-chat";
-import { useCallback, useEffect, useState } from "react";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
   collection,
   addDoc,
@@ -8,112 +8,133 @@ import {
   orderBy,
   doc,
   getDocs,
-  collectionGroup,
   setDoc,
 } from "firebase/firestore";
 import db from "../../../database/firebaseDb";
 import { getCurrentUser, computeHash } from "../../../services/user";
-import { Text, View } from "react-native";
-import styles from "./styles.style";
-import { ActivityIndicator } from "react-native-paper";
+import Loading from "../../components/loading";
 
 export default function Chat({ route, navigation }) {
   const getChatId = (receiver) => {
-    const computedHash = computeHash(currentUserId, receiverId);
-    console.log(computedHash);
+    const computedHash = computeHash(getCurrentUser().uid, receiverId);
     return computedHash;
   };
 
-  console.log("route.params ", route.params);
   const [messages, setMessages] = useState([]);
-  const currentUserName = getCurrentUser().displayName;
-  const currentUserId = getCurrentUser().uid;
+  const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
+  const [loadEarlier, setLoadEarlier] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const receiverId = route.params.receiverId;
   const subcollectionId = getChatId(receiverId);
 
   const parentCollectionRef = collection(db, "chats");
   const parentDocRef = doc(parentCollectionRef, subcollectionId);
   const subcollectionRef = collection(parentDocRef, subcollectionId);
-  const [loading, setLoading] = useState(false);
+
+  const handleSnapshot = (snapshot) => {
+    const newMessages = snapshot.docs.map((doc) => ({
+      _id: doc.id,
+      createdAt: doc.data().createdAt.toDate(),
+      text: doc.data().text,
+      user: doc.data().user,
+    }));
+    setMessages(newMessages);
+  };
+
+  async function getMessages() {
+    const subcollectionSnapshot = await getDocs(subcollectionRef);
+    const chatExists = !subcollectionSnapshot.empty;
+
+    if (chatExists) {
+      const values = query(subcollectionRef, orderBy("createdAt", "desc"));
+      onSnapshot(values, handleSnapshot);
+    } else {
+      await setDoc(parentDocRef, {});
+    }
+    setLoading(false);
+  }
 
   useEffect(() => {
-    async function getMessages() {
+    getMessages();
+
+    return () => {
       setMessages([]);
-
-      const subcollectionSnapshot = await getDocs(subcollectionRef);
-      const chatExists = !subcollectionSnapshot.empty;
-
-      if (chatExists) {
-        const values = query(subcollectionRef, orderBy("createdAt", "desc"));
-        onSnapshot(values, (snapshot) => {
-          setMessages(
-            snapshot.docs.map((doc) => ({
-              _id: doc.id,
-              createdAt: doc.data().createdAt.toDate(),
-              text: doc.data().text,
-              user: doc.data().user,
-            }))
-          );
-        });
-      } else {
-        await setDoc(parentDocRef, {});
-      }
-    }
-    getMessages().then(() => {
-      setLoading(false);
-    });
+      setLoading(true);
+    };
   }, [receiverId]);
 
-  const sendMessage = useCallback(async (newMessages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages)
-    );
+  const sendMessage = useCallback(
+    async (newMessages = []) => {
+      const { _id, createdAt, text, user } = newMessages[0];
+      const docData = {
+        _id,
+        createdAt,
+        text,
+        user,
+      };
 
-    console.log("sendMessage");
+      try {
+        const updatedMessages = GiftedChat.append(messages, newMessages);
+        setMessages(updatedMessages);
 
-    const { _id, createdAt, text, user } = newMessages[0];
-    const docData = {
-      _id,
-      createdAt,
-      text,
-      user,
-    };
-
-    await addDoc(subcollectionRef, docData)
-      .then((docs) => {
+        await addDoc(subcollectionRef, docData);
         console.log("Document successfully written!");
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log("error", error);
-      });
-  }, []);
+      }
+    },
+    [messages]
+  );
 
-  return (
-    <>
-      <GiftedChat
-        messages={messages}
-        placeholder="Escreva uma mensagem"
-        onSend={sendMessage}
-        user={{
-          _id: currentUserId,
-          name: currentUserName,
+  function renderBubble(props) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: "#d3d3d3",
+          },
         }}
-        loadEarlier={loading}
-        isLoadingEarlier={loading}
-        // renderLoading={() => {
-        //   return (
-        //     <View style={styles.loadingContainer}>
-        //       <ActivityIndicator size="large" color="#0000ff" />
-        //     </View>
-        //   );
-        // }}
       />
+    );
+  }
 
-      {/* {loading && messages.length === 0 && (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Sem mensagens ainda!</Text>
-        </View>
-      )} */}
-    </>
+  async function handleLoadEarlier() {
+    if (!messagePaginator.hasNextPage) {
+      setLoadEarlier(false);
+
+      return;
+    }
+    setIsLoadingEarlier(true);
+    const nextPaginator = await messagePaginator.nextPage();
+
+    setMessagePaginator(nextPaginator);
+    setMessages((currentMessages) =>
+      GiftedChat.prepend(currentMessages, nextPaginator.items.map(mapMessage))
+    );
+    setIsLoadingEarlier(false);
+  }
+
+  function mapUser(user) {
+    return {
+      _id: user.uid,
+      name: user.displayName,
+      avatar: user.photoURL,
+    };
+  }
+
+  if (loading) return <Loading />;
+  return (
+    <GiftedChat
+      messages={messages}
+      placeholder="Escreva uma mensagem"
+      onSend={sendMessage}
+      user={mapUser(getCurrentUser())}
+      loadEarlier={loadEarlier}
+      isLoadingEarlier={isLoadingEarlier}
+      onLoadEarlier={handleLoadEarlier}
+      renderBubble={renderBubble}
+    />
   );
 }

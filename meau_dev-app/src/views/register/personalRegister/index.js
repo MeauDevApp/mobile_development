@@ -51,8 +51,6 @@ const PersonalRegisterScreen = ({ navigation }) => {
     }).catch((error) => {
         console.error('Error uploading file:', error);
     });
-
-    setFile({ imagePath: 'users/', base64: '' });
   };
 
   const cleanUserFields = () => {
@@ -67,6 +65,7 @@ const PersonalRegisterScreen = ({ navigation }) => {
     setState('');
     setUser({});
     setFormSubmitted(true);
+    setFile({ imagePath: 'users/', base64: '' });
   };
 
   const handleImageChange = (image) => {
