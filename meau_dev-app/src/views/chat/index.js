@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import db from "../../../database/firebaseDb";
 import { getCurrentUser, computeHash } from "../../../services/user";
-import Loading from "../../components/loading";
+
 
 export default function Chat({ route, navigation }) {
   const getChatId = (receiverId) => {
@@ -124,7 +124,7 @@ export default function Chat({ route, navigation }) {
     };
   }
 
-  if (loading) return <Loading />;
+  if (loading) return < Loading />;
   return (
     <GiftedChat
       messages={messages}
