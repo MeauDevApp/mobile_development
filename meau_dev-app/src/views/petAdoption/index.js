@@ -12,6 +12,7 @@ import { getAdoptionPets } from "../../../services/user_animal";
 import Filters from "../../components/Filters";
 import AnimalCard from "../../components/animalCard";
 import styles from "./styles.style";
+import NoDataComponent from "../../components/noDataComponent";
 
 const PetAdoption = ({ navigation }) => {
   const [animals, setAnimals] = useState([]);

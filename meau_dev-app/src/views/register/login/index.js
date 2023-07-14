@@ -4,9 +4,11 @@ import { Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { connect } from 'react-redux';
 import { storeToken } from '../../../../redux/actions/storeToken';
+import { storeUser } from '../../../../redux/actions/storeUser';
 import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/Entypo';
 import styles from './styles.style';
+import { get } from '../../../../services/user';
 
 const Login = ({ navigation, actions }) => {
   const [email, setEmail] = useState('');
@@ -18,6 +20,20 @@ const Login = ({ navigation, actions }) => {
     [ {text: 'OK', onPress: () => console.log('OK Pressed')} ]);
   };
 
+  const storeUserRedux = async (userCredential) => {
+    try {
+      console.log(storeUserRedux);
+      console.log(userCredential.user.uid);
+      const user = await get(userCredential.user.uid);
+      console.log(user)
+      console.log(actions.storeUser(user))
+      actions.storeUser(user);
+    }
+    catch(error) {
+      console.log(error);
+    }
+  };
+
   const loginFireBase = () => {
     const auth = getAuth();
 
@@ -27,10 +43,11 @@ const Login = ({ navigation, actions }) => {
         console.log(actions.storeToken(token))
         actions.storeToken(token);
         navigation.navigate('Home');
+        storeUserRedux(userCredential);
       })
       .catch((error) => {
         setErrorLogin(error);
-        console.log(errorLogin);
+        console.log(error);
         authErrorAlert();
       });
   };
@@ -71,10 +88,12 @@ const Login = ({ navigation, actions }) => {
 
 const mapStateToProps = state => ({
   token: state.token,
+  user: state.user
 });
 
 const ActionCreators = {
-  storeToken
+  storeToken,
+  storeUser
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -205,6 +205,7 @@ export const sendInterestMessage = async (name, ownerId) => {
 
     await setDoc(parentDocRef, {});
     await addDoc(subcollectionRef, message);
+    // await updateChatUsers(getCurrentUser().uid, ownerId);
     console.log("Document successfully written!");
   } catch (error) {
     console.log("error", error);

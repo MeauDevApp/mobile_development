@@ -10,13 +10,16 @@ import {
   getDocs,
   setDoc,
 } from "firebase/firestore";
+import { useSelector } from "react-redux";
 import db from "../../../database/firebaseDb";
-import { getCurrentUser, computeHash } from "../../../services/user";
+import { computeHash } from "../../../services/user";
 import Loading from "../../components/loading";
 
-export default function Chat({ route, navigation }) {
+const Chat = ({ route, navigation }) => {
+  const userStore = useSelector((state) => state.user);
+
   const getChatId = (receiverId) => {
-    const computedHash = computeHash(getCurrentUser().uid, receiverId);
+    const computedHash = computeHash(userStore.user.id, receiverId);
     return computedHash;
   };
 
@@ -42,7 +45,7 @@ export default function Chat({ route, navigation }) {
     setMessages(newMessages);
   };
 
-  async function getMessages() {
+   const getMessages = async () => {
     const subcollectionSnapshot = await getDocs(subcollectionRef);
     const chatExists = !subcollectionSnapshot.empty;
 
@@ -57,10 +60,11 @@ export default function Chat({ route, navigation }) {
 
   useEffect(() => {
     getMessages();
-
+    
     return () => {
       setMessages([]);
       setLoading(true);
+      getMessages();
     };
   }, [receiverId]);
 
@@ -87,7 +91,7 @@ export default function Chat({ route, navigation }) {
     [messages]
   );
 
-  function renderBubble(props) {
+  const renderBubble = (props) => {
     return (
       <Bubble
         {...props}
@@ -100,7 +104,7 @@ export default function Chat({ route, navigation }) {
     );
   }
 
-  async function handleLoadEarlier() {
+  const handleLoadEarlier = async () =>  {
     if (!messagePaginator.hasNextPage) {
       setLoadEarlier(false);
 
@@ -116,11 +120,11 @@ export default function Chat({ route, navigation }) {
     setIsLoadingEarlier(false);
   }
 
-  function mapUser(user) {
+  const mapUser = () => {
     return {
-      _id: user.uid,
-      name: user.displayName,
-      avatar: user.photoURL,
+      _id: userStore.user.id,
+      name: userStore.user.name,
+      avatar: userStore.user.imageRef,
     };
   }
 
@@ -130,7 +134,7 @@ export default function Chat({ route, navigation }) {
       messages={messages}
       placeholder="Escreva uma mensagem"
       onSend={sendMessage}
-      user={mapUser(getCurrentUser())}
+      user={mapUser()}
       loadEarlier={loadEarlier}
       isLoadingEarlier={isLoadingEarlier}
       onLoadEarlier={handleLoadEarlier}
@@ -138,3 +142,5 @@ export default function Chat({ route, navigation }) {
     />
   );
 }
+
+export default Chat;

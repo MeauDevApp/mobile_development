@@ -8,7 +8,7 @@ import {
   updateAnimal,
   updateAnimalInterestedPeople,
 } from "../dao/animal";
-import db from '../database/firebaseDb';
+import db from "../database/firebaseDb";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../database/firebaseDb";
 import { createUserAnimal } from "./user_animal";
@@ -32,7 +32,7 @@ export const get = (id) => {
 
 export const getByName = (name) => {
   return getAnimalByName(name);
-}
+};
 
 export const remove = (id) => {
   return removeAnimal(id);
@@ -47,15 +47,25 @@ export const removeAdoptionPet = (id) => {
 };
 
 export const update = (id, data) => {
-  return (data === "toBeAdopted") 
-  ? AdoptedUpdateAnimal(id, true)
-  : updateAnimal(id, data);
+  return data === "toBeAdopted"
+    ? AdoptedUpdateAnimal(id, true)
+    : updateAnimal(id, data);
+};
+
+export const changeOwner = (id, newOwnerId) => {
+  if (newOwnerId) {
+    updateAnimal(id, { user_id: newOwnerId });
+  }
 };
 
 export const searchAdoptionAnimals = async (field, data) => {
   var animals = [];
   const uid = getCurrentUser() ? getCurrentUser().uid : null;
-  const q1 = query(collection(db, "animals"),where(field, "==", value), where("user_id", "!=", uid));
+  const q1 = query(
+    collection(db, "animals"),
+    where(field, "==", value),
+    where("user_id", "!=", uid)
+  );
 
   await getDocs(q1)
     .then((docs) => {
@@ -76,7 +86,7 @@ const blobToBase64 = (blob) => {
     reader.onloadend = () => resolve(reader.result);
     reader.readAsDataURL(blob);
   });
-}
+};
 
 export const getImageBase64 = async (path) => {
   if (!path) return null;

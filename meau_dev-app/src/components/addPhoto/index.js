@@ -31,7 +31,7 @@ const AddPhoto = ({ onValueChange, formSubmitted }) => {
     <View style={styles.container}>
       {
         (image == null) ?
-          <TouchableOpacity style={styles.container} onPress={chooseImage}>
+          <TouchableOpacity style={styles.square} onPress={chooseImage}>
             <Image style={{
                   resizeMode: 'stretch',
                   height: 24,
