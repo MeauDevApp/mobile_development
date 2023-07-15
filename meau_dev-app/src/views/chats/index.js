@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import styles from "./styles.style";
 import {
-  getChatUsers,
+  getChatUsersIds,
   getInterestedPeople,
 } from "../../../services/user";
 import { ActivityIndicator } from "react-native-paper";
@@ -19,12 +19,7 @@ const Chats = ({ navigation }) => {
     const fetchData = async () => {
       try {
         if (userStore && userStore.user.id) {
-          const chatUsers = await getChatUsers(userStore.user.id);
-          // const subcollectionId = getChatId(receiverId);
-          // const parentCollectionRef = collection(db, "chats");
-          // const parentDocRef = doc(parentCollectionRef, subcollectionId);
-          // const subcollectionRef = collection(parentDocRef, subcollectionId);
-
+          const chatUsers = await getChatUsersIds(userStore.user.id);
           const users = await getInterestedPeople(chatUsers);
 
           setInterestedPeople(users);
@@ -60,7 +55,7 @@ const Chats = ({ navigation }) => {
                 })
               }
             >
-              <UserCard user={user} />
+              <UserCard user={user} lastMessage={"Hel"} />
             </TouchableOpacity>
           </View>
       ))

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./styles.style";
 import { Ionicons } from "@expo/vector-icons";
+import FavoriteHeart from "../favoriteHeart";
 
 const AnimalCard = ({ animal }) => {
   const handleShare = () => {
@@ -23,7 +24,7 @@ const AnimalCard = ({ animal }) => {
             source={{ uri: animal.imageBase64 }}
             resizeMode="cover"
           />
-          <Ionicons name="heart" size={24} color="black" />
+          <FavoriteHeart />
           <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
           <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>
         </View>

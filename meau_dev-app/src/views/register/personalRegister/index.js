@@ -52,7 +52,7 @@ const PersonalRegisterScreen = ({ navigation }) => {
     const aleatoryNumber = getRandomNumber(0, 10000);
     const imageRef = file.imagePath + name + aleatoryNumber;
 
-    return { name, username,  age,  password, email, city, phone, address, state, imageRef }
+    return { name, username,  age,  password, email, city, phone, address, state, imageRef, favorites: [], privacySettings: [] }
 };
 
   const sendPhoto = async (imageRef) => {

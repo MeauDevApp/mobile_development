@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image } from "react-native";
 import styles from "./styles.style";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, lastMessage }) => {
   return (
     <View style={styles.container}>
       {user.imageBase64 !== "" ? (
@@ -12,10 +12,14 @@ const UserCard = ({ user }) => {
         </View>
       ) : (
         <View style={styles.card}>
-          <Image style={styles.image} source={require('../../../assets/images/image_not_found.jpg')} />
+          <Image
+            style={styles.image}
+            source={require("../../../assets/images/image_not_found.jpg")}
+          />
           <Text> {user.name} </Text>
         </View>
       )}
+      {lastMessage != "" ? <View><Text>{lastMessage}</Text></View> : <></>}
     </View>
   );
 };

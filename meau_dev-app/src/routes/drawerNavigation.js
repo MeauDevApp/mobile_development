@@ -22,6 +22,7 @@ import { getImageBase64 } from "../../services/user";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Confirmation from "../views/confirmation";
+import PrivacySettings from "../views/privacySettings/styles.style";
 
 const Drawer = createDrawerNavigator();
 
@@ -233,6 +234,7 @@ const DrawerNavigation = ({ isValidToken, actions }) => {
         />
         <Drawer.Screen name="Chats" component={Chats} />
         <Drawer.Screen name="Confirmation" component={Confirmation} />
+        <Drawer.Screen name="Privacidade" component={PrivacySettings} />
       </Drawer.Navigator>
     );
   } else {

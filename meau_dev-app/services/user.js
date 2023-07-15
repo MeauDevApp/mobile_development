@@ -151,15 +151,25 @@ export const getInterestedPeople = async (userIds) => {
     if (user && user.imageRef)
       imageBase64 = await getImageBase64(user.imageRef);
 
+    // const lastMessage = getLastChatMessage();
+
     users.push({ ...user, imageBase64, uid });
   }
 
   return users;
 };
 
-export const getChatUsers = async (id) => {
+export const getChatUsersIds = async (id) => {
   const currentUserDoc = await getUser(id);
   return currentUserDoc.chatUsers;
+};
+
+export const getLastChatMessage = async (id) => {
+  // const subcollectionId = computeHash();
+  // const parentCollectionRef = collection(db, "chats");
+  // const parentDocRef = doc(parentCollectionRef, subcollectionId);
+  // const subcollectionRef = collection(parentDocRef, subcollectionId);
+  // return ;
 };
 
 const mapUser = (user) => {
