@@ -51,7 +51,7 @@ const CustomHeaderRight = () => {
   );
 };
 
-const DropdownDrawerItem = ({ label, items, onPress }) => {
+const DropdownDrawerItem = ({ label, items, onPress, iconName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigation = useNavigation();
 
@@ -64,7 +64,7 @@ const DropdownDrawerItem = ({ label, items, onPress }) => {
       <TouchableOpacity onPress={handlePress}>
         <View style={styles.drawerItem}>
           <Ionicons
-            name="paw-outline"
+            name={iconName}
             size={24}
             color="black"
             style={styles.icon}
@@ -76,7 +76,10 @@ const DropdownDrawerItem = ({ label, items, onPress }) => {
       {isOpen && (
         <View style={styles.dropdown}>
           {items.map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => navigation.navigate(item.route)}>
+            <TouchableOpacity
+              key={index}
+              onPress={() => navigation.navigate(item.label)}
+            >
               <Text style={styles.dropdownItem}>{item.label}</Text>
             </TouchableOpacity>
           ))}
@@ -97,10 +100,7 @@ export const CustomDrawerContent = ({
 
   useEffect(() => {
     const getPhoto = async () => {
-      console.log("getPhoto");
-      console.log(userStore);
       const photo = await getImageBase64(userStore.user.imageRef);
-      console.log(photo);
       setUserPhoto(photo);
     };
 
@@ -112,25 +112,24 @@ export const CustomDrawerContent = ({
   }, [userStore]);
 
   const handleDropdownItemPress = () => {
-    // Handle dropdown item press
     console.log("Selected item:", item);
   };
 
   const shortcutItems = [
-    { label: "Cadastrar um pet", route: "Cadastro Pessoal" },
-    { label: "Adotar um pet" },
+    { label: "Cadastrar um pet" },
+    { label: "Adotar um Pet" },
   ];
 
-  const settingsItems = [
-    { label: "Privacidade" },
-  ];
+  const userItems = [{ label: "Meus Pets" }, { label: "Chats" }];
+
+  const settingsItems = [{ label: "Privacidade" }];
 
   const handleSignOut = async () => {
     await actions.signOut();
   };
 
-  return (
-    <DrawerContentScrollView {...props}>
+  const profilePic = () => {
+    return (
       <View>
         {userStore.user.imageRef !== "" ? (
           <View style={styles.card}>
@@ -147,34 +146,36 @@ export const CustomDrawerContent = ({
           </View>
         )}
       </View>
-      {state.routeNames.map((routeName, index) => {
-        if (routeName === "Informação Animal" || routeName === "Chat") {
-          return null;
-        }
+    );
+  };
 
-        return (
-          <DrawerItem
-            key={routeName}
-            label={routeName}
-            onPress={() => navigation.navigate(routeName)}
-          />
-        );
-      })}
-      <DropdownDrawerItem
-        label="Atalhos"
-        items={shortcutItems}
-        onPress={handleDropdownItemPress}
-      />
-      <DropdownDrawerItem
-        label="Configurações"
-        items={settingsItems}
-        onPress={handleDropdownItemPress}
-      />
-      <DrawerItem
-        label="Sair"
-        onPress={handleSignOut}
-        labelStyle={styles.bottomItemLabel}
-      />
+  return (
+    <DrawerContentScrollView {...props}>
+      <View styles={styles.container}>
+        {profilePic()}
+        <DropdownDrawerItem
+          label={userStore.user.name}
+          items={userItems}
+          onPress={handleDropdownItemPress}
+        />
+        <DropdownDrawerItem
+          label="Atalhos"
+          items={shortcutItems}
+          onPress={handleDropdownItemPress}
+          iconName="paw"
+        />
+        <DropdownDrawerItem
+          label="Configurações"
+          items={settingsItems}
+          onPress={handleDropdownItemPress}
+          iconName="settings"
+        />
+        <DrawerItem
+          label="Sair"
+          onPress={handleSignOut}
+          labelStyle={styles.bottomItemLabel}
+        />
+      </View>
     </DrawerContentScrollView>
   );
 };
@@ -231,7 +232,7 @@ const DrawerNavigation = ({ isValidToken, actions }) => {
           }}
         />
         <Drawer.Screen name="Chats" component={Chats} />
-        <Drawer.Screen name="Confirmation" component={Confirmation} />  
+        <Drawer.Screen name="Confirmation" component={Confirmation} />
       </Drawer.Navigator>
     );
   } else {
@@ -284,6 +285,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#88c9bf",
     paddingVertical: 10,
     width: "100%",
+    bottom: 0
   },
   drawerItem: {
     paddingHorizontal: 16,
@@ -309,4 +311,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#2D3032AD",
   },
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    height: 60,
+    backgroundColor: 'lightgray',
+    borderColor: 'red'
+  }
 });
