@@ -120,7 +120,7 @@ export const CustomDrawerContent = ({
     { label: "Adotar um Pet" },
   ];
 
-  const userItems = [{ label: "Meus Pets" }, { label: "Chats" }];
+  const userItems = [{ label: "Meus Pets" }, { label: "Chats" }, { label: "Cadastro Pessoal" }];
 
   const settingsItems = [{ label: "Privacidade" }];
 
