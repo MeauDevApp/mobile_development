@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles.style";
+import Animated from "react-native-reanimated";
 
 const Confirmation = () => {
     const [interestedName, setInterestedName] = useState('TODO');
     const [animalName, setAnimalName] = useState('TODO');
-
 
     const handleTransferAdoption = async () => {
         console.log("Transfer adoption")
@@ -19,15 +19,27 @@ const Confirmation = () => {
         console.log("Go chat")
     };
 
+
     return (
         <View style={styles.container}>
             <Image
                 source={require('../../../assets/images/confirmation.png')}
                 style={styles.backgroundImage}
             />
+
+            <View style={styles.circleContainer}>
+                <Image
+                    source={require('../../../assets/images/person.avif')}
+                    style={styles.personImage}
+                />
+                <Image
+                    source={require('../../../assets/images/pet.avif')}
+                    style={styles.petImage}
+                />
+            </View>
             <View>
                 <Text style={styles.text}>
-                    {interestedName} deseja adotar o seu pet {animalName}. {"\n"}
+                    Um novo amigo se interessou por {animalName}. {"\n"}
                     Confirma adoção?
                 </Text>
             </View>
