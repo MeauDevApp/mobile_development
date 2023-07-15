@@ -13,8 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import db from "../../../database/firebaseDb";
 import Loading from "../../components/loading";
-import { getCurrentUser, computeHash } from "../../../services/user";
-
+import { computeHash } from "../../../services/user";
 
 const Chat = ({ route, navigation }) => {
   const userStore = useSelector((state) => state.user);

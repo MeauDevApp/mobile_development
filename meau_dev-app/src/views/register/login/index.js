@@ -11,6 +11,8 @@ import styles from './styles.style';
 import { get } from '../../../../services/user';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { addToken } from '../../../../services/token';
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -33,9 +35,7 @@ async function registerForPushNotificationsAsync() {
       alert('Failed to get push token for push notification!');
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync({
-      projectId: "2b293a45-c07c-449f-921a-512e786a6785"
-    })).data;
+    token = (await Notifications.getExpoPushTokenAsync()).data; // 
     console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
@@ -83,11 +83,13 @@ const Login = ({ navigation, actions }) => {
 
   const loginFireBase = () => {
     const auth = getAuth();
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const token = userCredential.user.accessToken;
         console.log(actions.storeToken(token))
         actions.storeToken(token);
+        addToken(expoPushToken)
         navigation.navigate('Home');
         storeUserRedux(userCredential);
       })
