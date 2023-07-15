@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import styles from "./styles.style";
 import { getInterestedPeople } from '../../../services/user';
+import UserCard from '../userCard';
 
 const CustomModal = ({ visible, userIds, onClose, imageArray }) => {
   const [loading, setLoading] = useState(true);
@@ -30,23 +31,6 @@ const CustomModal = ({ visible, userIds, onClose, imageArray }) => {
       </View>
     );
   }
-
-  const renderImage = (user) => {
-    if (imageArray && user.imageBase64) {
-      return (
-        <View style={styles.card}>
-          <Image style={styles.image} source={{ uri: user.imageBase64 }} />
-        </View>
-      );
-    }
-    else {
-      return (
-        <View style={styles.card}>
-          <Image style={styles.image} source={require('../../../assets/images/image_not_found.jpg')} />
-        </View>
-      );
-    }
-  };
   
   return (
     <Modal
@@ -59,16 +43,15 @@ const CustomModal = ({ visible, userIds, onClose, imageArray }) => {
         <View style={styles.modalContent}>
           <Text style={styles.title}>Pessoas interessadas:</Text>
           <View>
-          {interestedPeople.length > 0 ? (
-            interestedPeople.map((user, index) => (
-              <React.Fragment key={index}>
-                {renderImage(user)}
-                <Text style={styles.item}>{user.name}</Text>
-              </React.Fragment>
-            ))
-          ) : (
-            <Text style={styles.item}>Não há pessoas interessadas no momento.</Text>
-          )}
+            {interestedPeople.length > 0 ? (
+              interestedPeople.map((user, index) => (
+                <React.Fragment key={index}>
+                  <UserCard user={user} />
+                </React.Fragment>
+              ))
+            ) : (
+              <Text style={styles.item}>Não há pessoas interessadas no momento.</Text>
+            )}
           </View>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Fechar</Text>

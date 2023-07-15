@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -9,11 +9,58 @@ import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/Entypo';
 import styles from './styles.style';
 import { get } from '../../../../services/user';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync({
+      projectId: "2b293a45-c07c-449f-921a-512e786a6785"
+    })).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
 
 const Login = ({ navigation, actions }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorLogin, setErrorLogin] = useState({});
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   const authErrorAlert = () => {
     Alert.alert('Erro de autenticação', 'Usuário não existe', 
@@ -36,7 +83,6 @@ const Login = ({ navigation, actions }) => {
 
   const loginFireBase = () => {
     const auth = getAuth();
-
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const token = userCredential.user.accessToken;
@@ -51,6 +97,23 @@ const Login = ({ navigation, actions }) => {
         authErrorAlert();
       });
   };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>

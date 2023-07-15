@@ -123,6 +123,7 @@ const blobToBase64 = (blob) => {
 };
 
 export const getImageBase64 = async (path) => {
+  console.log(path)
   if (!path) return null;
 
   try {
@@ -147,7 +148,6 @@ export const getInterestedPeople = async (userIds) => {
     var imageBase64 = "";
     const user = await getUser(uid);
 
-    console.log(user);
     if (user && user.imageRef)
       imageBase64 = await getImageBase64(user.imageRef);
 
@@ -157,8 +157,8 @@ export const getInterestedPeople = async (userIds) => {
   return users;
 };
 
-export const getChatUsers = async () => {
-  const currentUserDoc = await getUser(getCurrentUser().uid);
+export const getChatUsers = async (id) => {
+  const currentUserDoc = await getUser(id);
   return currentUserDoc.chatUsers;
 };
 

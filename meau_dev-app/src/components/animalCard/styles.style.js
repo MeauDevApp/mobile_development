@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 344,
+    height: 183,
     marginBottom: 10,
     borderRadius: 8,
   },
@@ -20,6 +20,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
+  },
+  header: {
+    backgroundColor: '#434343',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%'
   },
 });
 

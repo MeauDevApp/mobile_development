@@ -12,8 +12,9 @@ import {
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import db from "../../../database/firebaseDb";
-import { computeHash } from "../../../services/user";
 import Loading from "../../components/loading";
+import { getCurrentUser, computeHash } from "../../../services/user";
+
 
 const Chat = ({ route, navigation }) => {
   const userStore = useSelector((state) => state.user);
@@ -128,7 +129,7 @@ const Chat = ({ route, navigation }) => {
     };
   }
 
-  if (loading) return <Loading />;
+  if (loading) return < Loading />;
   return (
     <GiftedChat
       messages={messages}
