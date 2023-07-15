@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import db from "../../../database/firebaseDb";
-import Loading from "../../components/loading";
+import Loading from "../../components/Loading";
 import { computeHash } from "../../../services/user";
 
 const Chat = ({ route, navigation }) => {
