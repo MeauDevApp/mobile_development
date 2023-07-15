@@ -9,6 +9,7 @@ import { getCurrentUser, getInterestedPeople, sendInterestMessage } from "../../
 import * as Notifications from 'expo-notifications';
 import { showMessage } from 'react-native-flash-message';
 import { Ionicons } from "@expo/vector-icons";
+import { getTokenById } from "../../../services/token";
 
 const AnimalInfo = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,6 +20,7 @@ const AnimalInfo = ({ route, navigation }) => {
 
   const [loading, setLoading] = useState(true);
   const [animalId, setAnimalId] = useState('');
+  const [userId, setUserId] = useState('');
   const [age, setAge] = useState('');
   const [size, setSize] = useState('');
   const [gender, setGender] = useState('');
@@ -51,11 +53,11 @@ const AnimalInfo = ({ route, navigation }) => {
   );
 
   const setAnimalDetails = (animal) => {
-    console.log(animal)
     setAge(animal.age);
     setSize(animal.size);
     setGender(animal.gender);
     setToBeAdopted(animal.toBeAdopted);
+    setUserId(animal.user_id)
     animal.health.forEach((h) => {
       if (h == "Vermifugado") setDewormed(true)
       if (h == "Castrado") setCastrated(true)
@@ -140,8 +142,7 @@ const AnimalInfo = ({ route, navigation }) => {
     }
   };
 
-  const handleAdoptPet = () => {
-    console.log('handleAdoptPet');
+  const handleAdoptPet = async () => {
     try {
       updatedInterested(animalId);
       showMessage({
@@ -149,8 +150,10 @@ const AnimalInfo = ({ route, navigation }) => {
         description: 'A criação do pedido foi um sucesso!',
         type: 'success',
       });
+      console.log('handleAdoptPet');
+      const deviceToken = await getTokenById(userId);
+      sendPushNotification(deviceToken);
       sendInterestMessage(animal.name, animal.user_id);
-      handleCallNotification()
     }
     catch(error) {
       showMessage({
@@ -158,29 +161,28 @@ const AnimalInfo = ({ route, navigation }) => {
         description: 'A criação do pedido foi um sucesso!',
         type: 'info',
       });
-
     }
   };
 
-  async function handleCallNotification() {
-    const { status } = await Notifications.getPermissionsAsync();
-    if(status != 'granted') {
-      alert('No permition');
-      return;
-    }
-    let token = (await Notifications.getExpoPushTokenAsync({
-      projectId: '2b293a45-c07c-449f-921a-512e786a6785'
-    })).data;
-    console.log("token", token)
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: `Adoção ${animal.name}`,
-        body: "Tenho interesse em adotar seu pet",
-        
+  async function sendPushNotification(expoPushToken) {
+    const message = {
+      to: expoPushToken,
+      sound: 'default',
+      title: `Adoção do ${animal.name}`,
+      body: `${(animal.name)} tem um nova solicitação de adoção`,
+      data: { idInterested: userId },
+    };
+  
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
       },
-      trigger: null,
+      body: JSON.stringify(message),
     });
-}
+  }
 
   const handleInterested = () => {
     setModalVisible(true);
