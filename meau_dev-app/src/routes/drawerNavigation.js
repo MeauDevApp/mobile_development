@@ -1,7 +1,6 @@
 import {
   DrawerContentScrollView,
   DrawerItem,
-  DrawerItemList,
   createDrawerNavigator,
 } from "@react-navigation/drawer";
 import AnimalRegisterScreen from "../views/register/animalRegister";
@@ -14,12 +13,12 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { signOut } from "../../redux/actions/signOut";
 import { Ionicons } from "@expo/vector-icons";
-import { Button, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Chat from "../views/chat";
 import Chats from "../views/chats";
 import AnimalInfo from "../views/animalInfo";
-import Teste from "../views/register/login/teste";
+import Confirmation from "../views/confirmation";
 
 const Drawer = createDrawerNavigator();
 
@@ -130,6 +129,7 @@ const DrawerNavigation = ({ isValidToken, actions }) => {
           }}
         />
         <Drawer.Screen name="Chats" component={Chats} />
+        <Drawer.Screen name="Confirmation" component={Confirmation} />  
       </Drawer.Navigator>
     );
   } else {
