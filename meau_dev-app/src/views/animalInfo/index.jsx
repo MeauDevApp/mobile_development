@@ -8,6 +8,7 @@ import styles from "./styles.style";
 import { getCurrentUser, getInterestedPeople, sendInterestMessage } from "../../../services/user";
 import * as Notifications from 'expo-notifications';
 import { showMessage } from 'react-native-flash-message';
+import { Ionicons } from "@expo/vector-icons";
 
 const AnimalInfo = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -243,11 +244,22 @@ const AnimalInfo = ({ route, navigation }) => {
     return null;
   };
 
+  const handleEdit = () => {
+    console.log('handleEdit');
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View>
         <Image style={styles.image} source={{ uri: animal.imageBase64 }} />
-        <Text style={styles.namePet}>{animal.name}</Text>
+
+        <View style={styles.header}>
+          <Text style={styles.namePet}>{animal.name}</Text>
+          <TouchableOpacity onPress={() => handleEdit()}>
+            <Ionicons name="pencil" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+
         <SafeAreaView style={styles.alingItems}>
           <View style={styles.column}>
             <Text style={styles.label}>Sexo</Text>

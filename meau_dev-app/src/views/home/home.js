@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button}>
         <Text
           style={styles.textButton}
-          onPress={() => navigation.navigate("Cadastro Animal")}
+          onPress={() => navigation.navigate("Cadastrar um pet")}
         >
           CADASTRAR ANIMAL
         </Text>

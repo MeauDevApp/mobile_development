@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 15,
   },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   buttonText: {
     fontSize: 15,
     textAlign: 'center',
@@ -94,7 +99,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
-  }
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%'
+  },
 });
 
 export default styles;

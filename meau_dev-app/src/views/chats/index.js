@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import styles from "./styles.style";
 import {
   getChatUsers,
-  getCurrentUser,
   getInterestedPeople,
 } from "../../../services/user";
 import { ActivityIndicator } from "react-native-paper";
 import UserCard from "../../components/userCard";
+import NoDataComponent from "../../components/noDataComponent";
+import { useSelector } from "react-redux";
 
 const Chats = ({ navigation }) => {
-  console.log(getCurrentUser());
+  const userStore = useSelector((state) => state.user);
   const [interestedPeople, setInterestedPeople] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const chatUsers = await getChatUsers();
-        const users = await getInterestedPeople(chatUsers);
-        setInterestedPeople(users);
-        setLoading(false);
+        if (userStore && userStore.user.id) {
+          const chatUsers = await getChatUsers(userStore.user.id);
+          // const subcollectionId = getChatId(receiverId);
+          // const parentCollectionRef = collection(db, "chats");
+          // const parentDocRef = doc(parentCollectionRef, subcollectionId);
+          // const subcollectionRef = collection(parentDocRef, subcollectionId);
+
+          const users = await getInterestedPeople(chatUsers);
+
+          setInterestedPeople(users);
+          setLoading(false);
+          console.log(users)
+        }
       } catch (error) {
         console.log(error);
         setLoading(false);
