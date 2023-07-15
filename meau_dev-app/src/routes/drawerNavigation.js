@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import Chat from "../views/chat";
 import Chats from "../views/chats";
 import AnimalInfo from "../views/animalInfo";
+import Teste from "../views/register/login/teste";
 
 const Drawer = createDrawerNavigator();
 
