@@ -253,7 +253,7 @@ const AnimalInfo = ({ route, navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View>
-        <Image style={styles.image} source={{ uri: animal.imageBase64 }} />
+        <Image style={styles.image} resizeMode="contain" source={{ uri: animal.imageBase64 }} />
 
         <View style={styles.header}>
           <Text style={styles.namePet}>{animal.name}</Text>

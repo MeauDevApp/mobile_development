@@ -23,11 +23,9 @@ const PersonalRegisterScreen = ({ navigation }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleRegister = async () => {
-    const user = await getUserJSON();
-
     try {
+      const user = await getUserJSON();
       createUser(user);
-
       showMessage({
         message: 'Usuário criado',
         description: 'A criação foi um sucesso!',

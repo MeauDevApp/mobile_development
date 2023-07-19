@@ -14,6 +14,21 @@ const styles = StyleSheet.create({
   pets: {
     flex: 1
   },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 5,
+  },
+  card: {
+    backgroundColor: "#88c9bf",
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 10,
+    alignItems: "center",
+  },
 });
 
 export default styles;

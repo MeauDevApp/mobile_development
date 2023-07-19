@@ -119,7 +119,6 @@ export const CustomDrawerContent = ({
   useEffect(() => {
     const getPhoto = async () => {
       const photo = await getImageBase64(userStore.user.imageRef);
-      console.log("photo aq", photo)
       setUserPhoto(photo);
     };
 
@@ -155,19 +154,18 @@ export const CustomDrawerContent = ({
   const profilePic = () => {
     return (
       <View>
-        {userStore.user.imageRef !== "" ? (
+        {userStore.user.imageRef !== "" && (
           <View style={styles.card}>
             {userPhoto !== "" && (
-              <Image style={styles.image} source={{ uri: userPhoto }} />
+              <Image
+                style={styles.image}
+                source={
+                  userPhoto
+                    ? { uri: userPhoto }
+                    : require("../../assets/images/image_not_found.jpg")
+                }
+              />
             )}
-            <Text> {userStore.user.name} </Text>
-          </View>
-        ) : (
-          <View style={styles.card}>
-            <Image
-              style={styles.image}
-              source={require("../../assets/images/image_not_found.jpg")}
-            />
             <Text> {userStore.user.name} </Text>
           </View>
         )}

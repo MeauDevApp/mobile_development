@@ -52,8 +52,9 @@ const AnimalRegisterScreen = ({ navigation }) => {
                 type: 'success',
             });
             
-            cleanAnimalFields();
             if (file.base64) sendPhoto(animal.imageRef);
+
+            cleanAnimalFields();
         }
         catch(error) {
             showMessage({
@@ -81,8 +82,6 @@ const AnimalRegisterScreen = ({ navigation }) => {
         }).catch((error) => {
             console.error('Error uploading file:', error);
         });
-
-        setFile({ imagePath: 'animals/', base64: '' });
     };
 
     const handleImageChange = (image) => {
@@ -127,6 +126,7 @@ const AnimalRegisterScreen = ({ navigation }) => {
         setChecked06(false);
         setChecked07(false);
         setFormSubmitted(true);
+        setFile({ imagePath: 'animals/', base64: '' });
     };
 
     const getRandomNumber = (min, max) => {

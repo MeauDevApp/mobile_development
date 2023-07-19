@@ -6,40 +6,41 @@ import FavoriteHeart from "../favoriteHeart";
 
 const AnimalCard = ({ animal }) => {
   const handleShare = () => {
-    console.log("handleShare");
+    console.log("aqui", animal.imageBase64);
+  };
+
+  const animalPic = () => {
+    return (
+      <>
+        {animal.imageBase64 && (
+          <Image
+            style={styles.image}
+            resizeMode="contain"
+            source={
+              animal.imageBase64
+                ? { uri: animal.imageBase64 }
+                : require("../../../assets/images/image_not_found.jpg")
+            }
+          />
+        )}
+      </>
+    );
   };
 
   return (
     <View style={styles.container}>
-      {animal.imageBase64 !== "" ? (
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <Text style={styles.name}> {animal.name} </Text>
-            <TouchableOpacity onPress={() => handleShare()}>
-              <Ionicons name="information-circle" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          <Image
-            style={styles.image}
-            source={{ uri: animal.imageBase64 }}
-            resizeMode="cover"
-          />
-          <FavoriteHeart />
-          <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
-          <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>
+      <View style={styles.card}>
+        <View style={styles.header}>
+          <Text style={styles.name}> {animal.name} </Text>
+          <TouchableOpacity onPress={() => handleShare()}>
+            <Ionicons name="information-circle" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-      ) : (
-        <View style={styles.card}>
-          <Image
-            style={styles.image}
-            source={require("../../../assets/images/image_not_found.jpg")}
-            resizeMode="contain"
-          />
-          <Text> {animal.name} </Text>
-          <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
-          <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>
-        </View>
-      )}
+        {animalPic()}
+        <FavoriteHeart />
+        <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
+        <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>
+      </View>
     </View>
   );
 };

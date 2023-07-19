@@ -6,7 +6,7 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
-  Text
+  Text,
 } from "react-native";
 import { getImageBase64 } from "../../../services/animal";
 import { getUserPets } from "../../../services/user_animal";
@@ -29,6 +29,7 @@ const MyAnimals = ({ navigation }) => {
               var imageBase64 = "";
               if (animal.imageRef) {
                 imageBase64 = await getImageBase64(animal.imageRef);
+                console.log("imageBase64", imageBase64);
               }
               return { ...animal, imageBase64 };
             })
@@ -41,8 +42,12 @@ const MyAnimals = ({ navigation }) => {
       };
 
       fetchData();
+
+      return () => {
+        fetchData();
+      };
     }, [])
-  );
+    );
 
   if (loading) {
     return (
@@ -70,7 +75,7 @@ const MyAnimals = ({ navigation }) => {
           </View>
         ))
       ) : (
-        <NoDataComponent entity={'animais'} />
+        <NoDataComponent entity={"animais"} />
       )}
     </ScrollView>
   );
