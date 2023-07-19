@@ -1,7 +1,7 @@
 import { SIGN_OUT } from "../constants";
 import { getAuth } from "firebase/auth";
 
-export const signOut = async (dispath) => {
+export const signOut = async (navigation) => {
   return await getAuth()
     .signOut()
     .then(() => {

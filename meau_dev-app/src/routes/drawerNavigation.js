@@ -42,7 +42,7 @@ const CustomHeaderLeft = () => {
 
 const CustomHeaderRight = () => {
   const handleShare = () => {
-    console.log(handleShare);
+    console.log("handleShare");
   };
 
   return (
@@ -52,7 +52,7 @@ const CustomHeaderRight = () => {
   );
 };
 
-const DropdownDrawerItem = ({ label, items, onPress, iconName }) => {
+const DropdownDrawerItem = ({ label, items, onPress, iconName, pos }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigation = useNavigation();
 
@@ -63,14 +63,31 @@ const DropdownDrawerItem = ({ label, items, onPress, iconName }) => {
   return (
     <View>
       <TouchableOpacity onPress={handlePress}>
-        <View style={styles.drawerItem}>
-          <Ionicons
-            name={iconName}
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-          <Text style={styles.label}>{label}</Text>
+        <View style={styles.drawerContainer}>
+          <View style={styles.drawerItem}>
+            <Ionicons
+              name={iconName}
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+            <Text style={styles.label}>{label}</Text>
+          </View>
+          {isOpen ? (
+            <Ionicons
+              name={"caret-up-outline"}
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+          ) : (
+            <Ionicons
+              name={"caret-down-outline"}
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+          )}
         </View>
       </TouchableOpacity>
 
@@ -102,6 +119,7 @@ export const CustomDrawerContent = ({
   useEffect(() => {
     const getPhoto = async () => {
       const photo = await getImageBase64(userStore.user.imageRef);
+      console.log("photo aq", photo)
       setUserPhoto(photo);
     };
 
@@ -121,12 +139,17 @@ export const CustomDrawerContent = ({
     { label: "Adotar um Pet" },
   ];
 
-  const userItems = [{ label: "Meus Pets" }, { label: "Chats" }, { label: "Cadastro Pessoal" }];
+  const userItems = [
+    { label: "Meus Pets" },
+    { label: "Chats" },
+    { label: "Cadastro Pessoal" },
+  ];
 
   const settingsItems = [{ label: "Privacidade" }];
 
   const handleSignOut = async () => {
-    await actions.signOut();
+    // navigation.navigate('Login');
+    await actions.signOut(navigation);
   };
 
   const profilePic = () => {
@@ -134,7 +157,9 @@ export const CustomDrawerContent = ({
       <View>
         {userStore.user.imageRef !== "" ? (
           <View style={styles.card}>
-            <Image style={styles.image} source={{ uri: userPhoto }} />
+            {userPhoto !== "" && (
+              <Image style={styles.image} source={{ uri: userPhoto }} />
+            )}
             <Text> {userStore.user.name} </Text>
           </View>
         ) : (
@@ -158,6 +183,7 @@ export const CustomDrawerContent = ({
           label={userStore.user.name}
           items={userItems}
           onPress={handleDropdownItemPress}
+          iconName={""}
         />
         <DropdownDrawerItem
           label="Atalhos"
@@ -171,11 +197,13 @@ export const CustomDrawerContent = ({
           onPress={handleDropdownItemPress}
           iconName="settings"
         />
-        <DrawerItem
-          label="Sair"
-          onPress={handleSignOut}
-          labelStyle={styles.bottomItemLabel}
-        />
+        <View styles={styles.bottomLogOut}>
+          <DrawerItem
+            label="Sair"
+            onPress={handleSignOut}
+            labelStyle={styles.bottomItemLabel}
+          />
+        </View>
       </View>
     </DrawerContentScrollView>
   );
@@ -287,12 +315,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#88c9bf",
     paddingVertical: 10,
     width: "100%",
-    bottom: 0
+    bottom: 0,
   },
-  drawerItem: {
+  drawerContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: "black",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  drawerItem: {
     display: "flex",
     flexDirection: "row",
   },
@@ -314,15 +347,15 @@ const styles = StyleSheet.create({
     color: "#2D3032AD",
   },
   container: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     height: 60,
-    backgroundColor: 'lightgray',
-    borderColor: 'red'
-  }
+    backgroundColor: "lightgray",
+    borderColor: "red",
+  },
 });
