@@ -325,7 +325,7 @@ const AnimalInfo = ({ route, navigation }) => {
         {dataFetched && renderInteresteds()}
         {dataFetched && renderAdoptButton()}
         {dataFetched && renderTakeOffButton()}
-        <CustomModal visible={modalVisible} userIds={animal.interestedPeople} onClose={closeModal} imageArray={true} />
+        <CustomModal visible={modalVisible} userIds={animal.interestedPeople} onClose={closeModal} imageArray={true} navigation={navigation} animal={animal} />
       </View>
     </ScrollView>
   );
