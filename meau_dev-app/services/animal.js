@@ -53,9 +53,9 @@ export const update = (id, data) => {
 };
 
 export const changeOwner = (id, newOwnerId) => {
-  if (newOwnerId) {
+  try {
     updateAnimal(id, { user_id: newOwnerId });
-  }
+  } catch (error) {}
 };
 
 export const searchAdoptionAnimals = async (field, data) => {
