@@ -35,8 +35,8 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
   }
 
   const handleUserCardPress = (user) => {
+    onClose(setModalVisible(false));
     navigation.navigate("Confirmation", {user, animal});
-    setModalVisible(false)
   };
 
   return (
