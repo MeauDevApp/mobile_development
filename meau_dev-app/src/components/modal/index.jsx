@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import styles from "./styles.style";
 import { getInterestedPeople } from '../../../services/user';
 import UserCard from '../userCard';
@@ -22,7 +22,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
       }
     }
     fetchData();
-  },);
+  }, []);
 
   if (loading) {
     return (
@@ -47,7 +47,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.title}>Pessoas interessadas:</Text>
-          <View>
+          <ScrollView style={styles.scrollContainer}>
             {interestedPeople.length > 0 ? (
               interestedPeople.map((user, index) => (
                 <React.Fragment key={index}>
@@ -59,7 +59,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
             ) : (
               <Text style={styles.item}>Não há pessoas interessadas no momento.</Text>
             )}
-          </View>
+          </ScrollView>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Fechar</Text>
           </TouchableOpacity>
