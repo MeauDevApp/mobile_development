@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { addAnimalToFavorites, removeAnimalFromFavorites } from '../../../services/user';
 
-const FavoriteHeart = ({ id, isLiked }) => {
+const FavoriteHeart = ({ id, isLiked, userId, animalId }) => {
   const [liked, setLiked] = useState(isLiked);
 
   useEffect(() => {
@@ -10,7 +11,15 @@ const FavoriteHeart = ({ id, isLiked }) => {
   }, [isLiked]);
 
   const handleHeartClick = () => {
+    console.log("handleHeartClick");
     setLiked(!liked);
+    console.log("Here mf");
+    // setIsFavorited(!isFavorited)
+    if (!liked) {
+      addAnimalToFavorites(userId, animalId);
+    } else {
+      removeAnimalFromFavorites(userId, animalId);
+    }
   };
 
   return (

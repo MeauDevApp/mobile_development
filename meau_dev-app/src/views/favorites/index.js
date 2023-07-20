@@ -13,8 +13,10 @@ import AnimalCard from "../../components/animalCard";
 import styles from "./styles.style";
 import NoDataComponent from "../../components/noDataComponent";
 import { getUserFavorites } from "../../../services/user_animal";
+import { useSelector } from "react-redux";
 
 const Favorites = ({ navigation }) => {
+  const userStore = useSelector((state) => state.user);
   const [animals, setAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,8 +24,8 @@ const Favorites = ({ navigation }) => {
     React.useCallback(() => {
       const fetchData = async () => {
         try {
-          const animalsData = await getUserFavorites();
-
+          const animalsData = await getUserFavorites(userStore.user.id);
+          console.log(animalsData)
           const animalsWithImages = await Promise.all(
             animalsData.map(async (animal) => {
               var imageBase64 = "";

@@ -9,6 +9,9 @@ const UserCard = ({ user, lastMessage }) => {
         <View style={styles.card}>
           <Image style={styles.image} source={{ uri: user.imageBase64 }} />
           <Text style={styles.name}> {user.name} </Text>
+          <View style={styles.lastMessage}>
+            <Text>{lastMessage}</Text>
+          </View>
         </View>
       ) : (
         <View style={styles.card}>
@@ -17,9 +20,11 @@ const UserCard = ({ user, lastMessage }) => {
             source={require("../../../assets/images/image_not_found.jpg")}
           />
           <Text> {user.name} </Text>
+          <View style={styles.lastMessage}>
+            <Text>{lastMessage}</Text>
+          </View>
         </View>
       )}
-      {lastMessage != "" ? <View><Text>{lastMessage}</Text></View> : <></>}
     </View>
   );
 };

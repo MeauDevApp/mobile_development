@@ -5,7 +5,7 @@ import { getByName, remove as removeAnimal, removeAdoptionPet, updatedInterested
 import { update } from "../../../services/animal";
 import CustomModal from "../../components/modal";
 import styles from "./styles.style";
-import { getCurrentUser, getInterestedPeople, sendInterestMessage } from "../../../services/user";
+import { sendInterestMessage } from "../../../services/user";
 import * as Notifications from 'expo-notifications';
 import { showMessage } from 'react-native-flash-message';
 import { Ionicons } from "@expo/vector-icons";

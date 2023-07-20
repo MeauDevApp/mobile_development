@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles.style";
 import { changeOwner, removeInterested } from "../../../services/animal";
 import { showMessage } from 'react-native-flash-message';
+import { computeHash } from "../../../services/user";
 
 const Confirmation = ({ route, navigation }) => {
     const { user } = route.params;
@@ -31,6 +32,9 @@ const Confirmation = ({ route, navigation }) => {
 
     const handleGoChat = async () => {
         console.log("Go chat")
+        navigation.navigate("Chat", {
+            receiverId: user.uid,
+        })
     };
 
     useEffect(() => {

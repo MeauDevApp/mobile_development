@@ -9,11 +9,13 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
   const [interestedPeople, setInterestedPeople] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  console.log(userIds);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (userIds.length > 0) {
-          const users = await getInterestedPeople(userIds);
+          const users = await getInterestedPeople('', userIds);
           setInterestedPeople(users);
         }
         setLoading(false);
@@ -22,7 +24,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
       }
     }
     fetchData();
-  },);
+  }, []);
 
   if (loading) {
     return (

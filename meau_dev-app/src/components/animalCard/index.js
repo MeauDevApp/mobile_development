@@ -7,6 +7,8 @@ import { addAnimalToFavorites, removeAnimalFromFavorites } from "../../../servic
 import { useSelector } from "react-redux";
 
 const AnimalCard = ({ animal }) => {
+  console.log(animal.id)
+  console.log(animal)
   const userStore = useSelector((state) => state.user);
 
   const handleShare = () => {
@@ -55,7 +57,7 @@ const AnimalCard = ({ animal }) => {
         </View>
         {animalPic()}
         <TouchableOpacity onPress={handleFavoriteToggle} >
-          <FavoriteHeart isLiked={isFavorited} />
+          <FavoriteHeart isLiked={isFavorited} userId={userStore.user.id} animalId={animal.id} />
         </TouchableOpacity>
         <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
         <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>

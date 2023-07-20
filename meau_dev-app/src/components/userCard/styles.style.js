@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  lastMessage: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    textAlign: 'center',
+    color: "grey"
+  },
 });
 
 export default styles;

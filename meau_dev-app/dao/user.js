@@ -34,6 +34,7 @@ export const getUsers = async () => {
 };
 
 export const getUser = async (id) => {
+  console.log(id)
   const userDoc = await getDoc(doc(db, 'users', id))
   if (userDoc.exists()) {
     let userData = userDoc.data();

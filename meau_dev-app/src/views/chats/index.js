@@ -20,7 +20,7 @@ const Chats = ({ navigation }) => {
       try {
         if (userStore && userStore.user.id) {
           const chatUsers = await getChatUsersIds(userStore.user.id);
-          const users = await getInterestedPeople(chatUsers);
+          const users = await getInterestedPeople(userStore.user.id, chatUsers);
 
           setInterestedPeople(users);
           setLoading(false);
@@ -55,7 +55,7 @@ const Chats = ({ navigation }) => {
                 })
               }
             >
-              <UserCard user={user} lastMessage={"Hel"} />
+              <UserCard user={user} lastMessage={user.lastMessage} />
             </TouchableOpacity>
           </View>
       ))

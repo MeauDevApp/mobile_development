@@ -9,7 +9,7 @@ import {
 import { getAuth } from "firebase/auth";
 import { storage } from "../database/firebaseDb";
 import db from "../database/firebaseDb";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, updateDoc } from "firebase/firestore";
 
 const auth = getAuth();
 
@@ -116,16 +116,21 @@ export const signOut = async () => {
 
 export const addAnimalToFavorites = async (userId, animalId) => {
   console.log("inside")
+  console.log("userId", userId)
   try {
-    const userRef = db.collection("users").doc(userId);
-    const userDoc = await userRef.get();
-    
+    const userDoc = await getDoc(doc(db, 'users', userId))
+
     if (userDoc.exists) {
+      console.log("another inside")
+      
       const favorites = userDoc.data().favorites || [];
       if (!favorites.includes(animalId)) {
         favorites.push(animalId);
-        console.log(animalId)
-        await userRef.update({ favorites });
+        console.log("animalId", animalId)
+        console.log(favorites)
+        // await updateDoc(userDoc, favorites);
+        // await updateDoc(doc(db, 'users', userId), { favorites });
+        await updateDoc(userDoc, favorites);
       }
     }
   } catch (error) {
@@ -135,9 +140,7 @@ export const addAnimalToFavorites = async (userId, animalId) => {
 
 export const removeAnimalFromFavorites = async (userId, animalId) => {
   try {
-    const userRef = db.collection("users").doc(userId);
-
-    const userDoc = await userRef.get();
+    const userDoc = getDoc(doc(db, 'users', userId))
 
     if (userDoc.exists) {
       const favorites = userDoc.data().favorites || [];
@@ -179,19 +182,24 @@ export const getImageBase64 = async (path) => {
   }
 };
 
-export const getInterestedPeople = async (userIds) => {
+export const getInterestedPeople = async (currentUserId, userIds) => {
   var users = [];
+  const lastMessage = '';
 
-  for (const uid of userIds) {
-    var imageBase64 = "";
-    const user = await getUser(uid);
+  if (userIds && userIds.length > 0) {
+    for (const uid of userIds) {
+      var imageBase64 = "";
+      const user = await getUser(uid);
 
-    if (user && user.imageRef)
-      imageBase64 = await getImageBase64(user.imageRef);
+      if (user && user.imageRef)
+        imageBase64 = await getImageBase64(user.imageRef);
 
-    // const lastMessage = getLastChatMessage();
+      if(currentUserId != '')
+        lastMessage = await getLastChatMessage(currentUserId, uid);
+      console.log(lastMessage);
 
-    users.push({ ...user, imageBase64, uid });
+      users.push({ ...user, imageBase64, uid, lastMessage });
+    }
   }
 
   return users;
@@ -202,12 +210,20 @@ export const getChatUsersIds = async (id) => {
   return currentUserDoc.chatUsers;
 };
 
-export const getLastChatMessage = async (id) => {
-  // const subcollectionId = computeHash();
-  // const parentCollectionRef = collection(db, "chats");
-  // const parentDocRef = doc(parentCollectionRef, subcollectionId);
-  // const subcollectionRef = collection(parentDocRef, subcollectionId);
-  // return ;
+export const getLastChatMessage = async (currentUserId, uid) => {
+  const subcollectionId = computeHash(currentUserId, uid);
+  const parentCollectionRef = collection(db, "chats");
+  const parentDocRef = doc(parentCollectionRef, subcollectionId);
+  const subcollectionRef = collection(parentDocRef, subcollectionId);
+  const q = query(subcollectionRef, orderBy("createdAt", "desc"), limit(1));
+
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    const lastDocument = snapshot.docs[0];
+    return lastDocument.data().text;
+  } else {
+    return "Não há mensagens";
+  }
 };
 
 const mapUser = (user) => {
