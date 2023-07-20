@@ -20,6 +20,7 @@ const AnimalInfo = ({ route, navigation }) => {
 
   const [loading, setLoading] = useState(true);
   const [animalId, setAnimalId] = useState('');
+  const [animalRoute, setAnimalRoute] = useState('');
   const [userId, setUserId] = useState('');
   const [age, setAge] = useState('');
   const [size, setSize] = useState('');
@@ -42,6 +43,8 @@ const AnimalInfo = ({ route, navigation }) => {
           const animalsData = await getByName(animal.name)
           setAnimalDetails(animalsData[0])
           setAnimalId(animalsData[1]);
+          let animalRoute = {...animal, animalId: animalId}
+          setAnimalRoute(animalRoute)
           setDataFetched(true);
           setLoading(false);
         } catch (error) {
@@ -325,7 +328,7 @@ const AnimalInfo = ({ route, navigation }) => {
         {dataFetched && renderInteresteds()}
         {dataFetched && renderAdoptButton()}
         {dataFetched && renderTakeOffButton()}
-        <CustomModal visible={modalVisible} userIds={animal.interestedPeople} onClose={closeModal} imageArray={true} />
+        <CustomModal visible={modalVisible} userIds={animal.interestedPeople} onClose={closeModal} imageArray={true} navigation={navigation} animal={animalRoute} />
       </View>
     </ScrollView>
   );
