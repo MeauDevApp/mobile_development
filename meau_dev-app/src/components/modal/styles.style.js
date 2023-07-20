@@ -47,7 +47,10 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 10,
     borderRadius: 8,
-  }
+  },
+  scrollContainer: {
+    maxHeight: 400
+  },
 });
 
 export default styles;
