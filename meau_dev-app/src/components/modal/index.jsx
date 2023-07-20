@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import styles from "./styles.style";
 import { getInterestedPeople } from '../../../services/user';
 import UserCard from '../userCard';
@@ -7,12 +7,11 @@ import UserCard from '../userCard';
 const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal }) => {
   const [loading, setLoading] = useState(true);
   const [interestedPeople, setInterestedPeople] = useState([]);
-  const [modalVisible, setModalVisible] = useState(visible);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(userIds);
         if (userIds.length > 0) {
           const users = await getInterestedPeople(userIds);
           setInterestedPeople(users);
@@ -23,7 +22,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
       }
     }
     fetchData();
-  }, []);
+  },);
 
   if (loading) {
     return (
@@ -35,6 +34,7 @@ const CustomModal = ({ visible, userIds, onClose, imageArray, navigation, animal
 
   const handleUserCardPress = (user) => {
     navigation.navigate("Confirmation", {user, animal});
+    setModalVisible(false)
   };
 
   return (

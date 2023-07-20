@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect  } from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles.style";
-import Animated from "react-native-reanimated";
 import { changeOwner, removeInterested } from "../../../services/animal";
 import { showMessage } from 'react-native-flash-message';
 
-const Confirmation = ({ route }) => {
+const Confirmation = ({ route, navigation }) => {
     const { user } = route.params;
     const { animal } = route.params;
 
@@ -17,15 +16,17 @@ const Confirmation = ({ route }) => {
             description: 'Transferência realizada com sucesso!',
             type: 'success',
         });
+        navigation.navigate("Meus Pets")
     };
 
     const handleNotAuthorizeAdoption = async () => {
         removeInterested(animal.animalId, user.uid);
         showMessage({
-            message: `Adoção de ${animal.name}!`,
-            description: 'Pedido de adoção negado!',
-            type: 'danger',
+            message: 'Animal removido da lista de animais para adoção',
+            description: 'Remoção sucedida!',
+            type: 'info'
         });
+        navigation.navigate("Meus Pets")
     };
 
     const handleGoChat = async () => {

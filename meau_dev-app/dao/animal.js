@@ -34,11 +34,9 @@ export const removeAnimalInterestedPeople = async (id, idInterested) => {
 
   try {
     const interestedArray = await getDoc(animalDoc).then((docs) => {
-      console.log("ANIMAL", docs.data().interestedPeople)
       return docs.data().interestedPeople
     })
     const updateArray = interestedArray.filter((id) => id !== idInterested);
-    console.log("UPDATE", updateArray)
     await updateDoc(animalDoc, {
       interestedPeople: updateArray
     });
