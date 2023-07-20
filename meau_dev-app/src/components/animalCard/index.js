@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./styles.style";
 import { Ionicons } from "@expo/vector-icons";
 import FavoriteHeart from "../favoriteHeart";
+import { addAnimalToFavorites, removeAnimalFromFavorites } from "../../../services/user";
+import { useSelector } from "react-redux";
 
 const AnimalCard = ({ animal }) => {
+  const userStore = useSelector((state) => state.user);
+
   const handleShare = () => {
-    console.log("aqui", animal.imageBase64);
+    console.log("aqui");
   };
+
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  const handleFavoriteToggle = () => {
+    console.log("Here mf");
+    setIsFavorited(!isFavorited)
+    if (!isFavorited) {
+      addAnimalToFavorites(userStore.user.id, animal.id);
+    } else {
+      removeAnimalFromFavorites(userStore.user.id, animal.id);
+    }
+  };
+
 
   const animalPic = () => {
     return (
@@ -37,7 +54,9 @@ const AnimalCard = ({ animal }) => {
           </TouchableOpacity>
         </View>
         {animalPic()}
-        <FavoriteHeart />
+        <TouchableOpacity onPress={handleFavoriteToggle} >
+          <FavoriteHeart isLiked={isFavorited} />
+        </TouchableOpacity>
         <Text style={styles.description}>3 NOVOS INTERESSADOS</Text>
         <Text style={styles.description}>APADRINHAMENTO | AJUDA</Text>
       </View>

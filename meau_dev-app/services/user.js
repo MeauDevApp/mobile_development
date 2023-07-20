@@ -114,6 +114,44 @@ export const signOut = async () => {
     });
 };
 
+export const addAnimalToFavorites = async (userId, animalId) => {
+  console.log("inside")
+  try {
+    const userRef = db.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+    
+    if (userDoc.exists) {
+      const favorites = userDoc.data().favorites || [];
+      if (!favorites.includes(animalId)) {
+        favorites.push(animalId);
+        console.log(animalId)
+        await userRef.update({ favorites });
+      }
+    }
+  } catch (error) {
+    console.error("Error adding animal to favorites:", error);
+  }
+};
+
+export const removeAnimalFromFavorites = async (userId, animalId) => {
+  try {
+    const userRef = db.collection("users").doc(userId);
+
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      const favorites = userDoc.data().favorites || [];
+      const index = favorites.indexOf(animalId);
+      if (index !== -1) {
+        favorites.splice(index, 1);
+        await userRef.update({ favorites });
+      }
+    }
+  } catch (error) {
+    console.error("Error removing animal from favorites:", error);
+  }
+};
+
 const blobToBase64 = (blob) => {
   return new Promise((resolve, _) => {
     const reader = new FileReader();

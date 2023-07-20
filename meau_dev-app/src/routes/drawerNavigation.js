@@ -8,6 +8,7 @@ import PersonalRegisterScreen from "../views/register/personalRegister";
 import PetAdoption from "../views/petAdoption";
 import HomeScreen from "../views/home/home";
 import MyAnimals from "../views/myAnimals";
+import Favorites from "../views/favorites";
 import Login from "../views/register/login";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -142,6 +143,7 @@ export const CustomDrawerContent = ({
     { label: "Meus Pets" },
     { label: "Chats" },
     { label: "Cadastro Pessoal" },
+    { label: "Favoritos" },
   ];
 
   const settingsItems = [{ label: "Privacidade" }];
@@ -258,6 +260,7 @@ const DrawerNavigation = ({ isValidToken, actions }) => {
             headerLeft: () => <CustomHeaderLeft />,
           }}
         />
+        <Drawer.Screen name="Favoritos" component={Favorites} />
         <Drawer.Screen name="Chats" component={Chats} />
         <Drawer.Screen name="Confirmation" component={Confirmation} />
         <Drawer.Screen name="Privacidade" component={PrivacySettings} />
