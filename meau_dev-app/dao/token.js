@@ -1,4 +1,4 @@
-import db from '../database/firebaseDb';
+import {db} from '../database/firebaseDb';
 import { setDoc, doc, getDoc } from 'firebase/firestore';
 
 export const addDeviceToken = async (idUser, token) => {

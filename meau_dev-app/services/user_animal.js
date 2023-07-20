@@ -1,7 +1,7 @@
 import { createUserAnimals, getUserAnimals } from "../dao/user_animals";
 import { getAnimalsForAdoption } from "../dao/animal";
 import { getUser } from "../dao/user";
-import db from "../database/firebaseDb";
+import {db} from "../database/firebaseDb";
 import { doc, getDoc } from "firebase/firestore";
 
 export const createUserAnimal = (user, animal, idAnimal) => {

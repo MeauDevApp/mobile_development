@@ -9,7 +9,7 @@ import {
   updateAnimal,
   updateAnimalInterestedPeople,
 } from "../dao/animal";
-import db from "../database/firebaseDb";
+import {db} from "../database/firebaseDb";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../database/firebaseDb";
 import { createUserAnimal } from "./user_animal";

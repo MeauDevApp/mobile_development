@@ -1,4 +1,4 @@
-import db from '../database/firebaseDb';
+import {db} from '../database/firebaseDb';
 import { collection, getDocs, addDoc, setDoc, doc, query, where } from 'firebase/firestore';
 import { getCurrentUser } from '../services/user';
 

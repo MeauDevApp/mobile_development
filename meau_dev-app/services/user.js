@@ -8,7 +8,7 @@ import {
 } from "../dao/user";
 import { getAuth } from "firebase/auth";
 import { storage } from "../database/firebaseDb";
-import db from "../database/firebaseDb";
+import {db} from "../database/firebaseDb";
 import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, updateDoc } from "firebase/firestore";
 
 const auth = getAuth();
