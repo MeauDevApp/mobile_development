@@ -17,11 +17,8 @@ export const addDeviceToken = async (idUser, token) => {
 };
 
 export const getUserToken = async (id) => {
-  console.log("idIIIIIIIIIIII", id)
   const tokenDoc = await getDoc(doc(db, 'tokens', id))
-
   if (tokenDoc.exists()) {
-    console.log("doc", tokenDoc.data())
     return tokenDoc.data().token;
   }
   else {

@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles.style";
 import { changeOwner, removeInterested } from "../../../services/animal";
 import { showMessage } from 'react-native-flash-message';
+import { getTokenById } from "../../../services/token";
 
 const Confirmation = ({ route, navigation }) => {
     const { user } = route.params;
@@ -16,6 +17,15 @@ const Confirmation = ({ route, navigation }) => {
             description: 'Transferência realizada com sucesso!',
             type: 'success',
         });
+        const tokenInterested = await getTokenById(user.uid)
+        const message = {
+            to: tokenInterested,
+            sound: 'default',
+            title: `Adoção de ${animal.name}`,
+            body: `${(animal.name)} tem um nova solicitação de adoção`,
+            data: {},
+          };
+        sendPushNotification(message)
         navigation.navigate("Meus Pets")
     };
 
@@ -26,6 +36,14 @@ const Confirmation = ({ route, navigation }) => {
             description: 'Remoção sucedida!',
             type: 'info'
         });
+        const message = {
+            to: tokenInterested,
+            sound: 'default',
+            title: `Adoção de ${animal.name}`,
+            body: `${user.name} negou seu pedido de adoção de ${(animal.name)}!`,
+            data: {},
+          };
+        sendPushNotification(message)
         navigation.navigate("Meus Pets")
     };
 
