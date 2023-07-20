@@ -7,11 +7,11 @@ export const addAnimal = async (animal) => {
   const animalsCollection = collection(db, 'animals');
 
   await addDoc(animalsCollection, animal)
-  .then((docs) => {
-    console.log("Document successfully written!");
-  }).catch((error) => {
-    console.log("error", error);
-  });
+    .then((docs) => {
+      console.log("Document successfully written!");
+    }).catch((error) => {
+      console.log("error", error);
+    });
 };
 
 export const updateAnimalInterestedPeople = async (id, animal) => {
@@ -29,10 +29,30 @@ export const updateAnimalInterestedPeople = async (id, animal) => {
   }
 };
 
+export const removeAnimalInterestedPeople = async (id, idInterested) => {
+  const animalDoc = doc(db, 'animals', id);
+
+  try {
+    const interestedArray = await getDoc(animalDoc).then((docs) => {
+      console.log("ANIMAL", docs.data().interestedPeople)
+      return docs.data().interestedPeople
+    })
+    const updateArray = interestedArray.filter((id) => id !== idInterested);
+    console.log("UPDATE", updateArray)
+    await updateDoc(animalDoc, {
+      interestedPeople: updateArray
+    });
+
+    console.log("Array updated successfully!");
+  } catch (error) {
+    console.error("Error updating array:", error);
+  }
+};
+
 export const getAnimalsForAdoption = async () => {
   var animals = [];
   const uid = getCurrentUser() ? getCurrentUser().uid : null;
-  const q1 = query(collection(db, "animals"),where("toBeAdopted", "==", true),where("user_id", "!=", uid));
+  const q1 = query(collection(db, "animals"), where("toBeAdopted", "==", true), where("user_id", "!=", uid));
 
   await getDocs(q1)
     .then((docs) => {
@@ -51,14 +71,14 @@ export const getAnimals = async () => {
   var animals = [];
 
   await getDocs(collection(db, 'animals'))
-  .then((docs) => {
-    docs.forEach((doc) => {
-      animals.push(doc.data());
+    .then((docs) => {
+      docs.forEach((doc) => {
+        animals.push(doc.data());
+      });
+    })
+    .catch((error) => {
+      console.log(error);
     });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
   console.log(animals);
   return animals;

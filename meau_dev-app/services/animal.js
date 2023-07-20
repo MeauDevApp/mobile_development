@@ -5,6 +5,7 @@ import {
   getAnimalByName,
   getAnimals,
   removeAnimal,
+  removeAnimalInterestedPeople,
   updateAnimal,
   updateAnimalInterestedPeople,
 } from "../dao/animal";
@@ -104,4 +105,11 @@ export const getImageBase64 = async (path) => {
     console.log("Error retrieving image from Firebase Storage:", error);
     return "";
   }
+  
+};
+
+export const removeInterested = (id, idInterested) => {
+  try {
+    removeAnimalInterestedPeople(id, idInterested);
+  } catch (error) {}
 };
